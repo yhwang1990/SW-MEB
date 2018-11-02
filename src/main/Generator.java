@@ -5,7 +5,8 @@ import generator.RandomGenerator;
 public class Generator {
 
 	public static void main(String[] args) {
-		RandomGenerator.genNormal(10000, 10);
+		RandomGenerator.genUniform(100000, 10000);
+		RandomGenerator.genNormal(100000, 10000);
 	}
 
 }
