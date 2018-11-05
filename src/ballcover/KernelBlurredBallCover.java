@@ -1,4 +1,4 @@
-package stream;
+package ballcover;
 
 public class KernelBlurredBallCover {
 
