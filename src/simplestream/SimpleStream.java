@@ -72,9 +72,24 @@ public class SimpleStream {
 		this.time_elapsed += (t2 - t1) / 1e9;
 	}
 	
-	public void validate(){
+	public void validate(PointSet pointSet){
 		Coreset coreset = new Coreset(new PointSet(this.dim, this.core_points), 1e-9);
 		System.out.println("Core Radius=" + coreset.radius);
+		
+		double max_sq_dist = 0.0;
+		for (Point point : pointSet.points) {
+			double sq_dist = Util.sq_dist(this.center, point.data);
+
+			if (sq_dist > max_sq_dist) {
+				max_sq_dist = sq_dist;
+			}
+		}
+
+		double exp_radius = Math.sqrt(max_sq_dist);
+		double approx_ratio = exp_radius / coreset.radius;
+
+		System.out.println("Actual Radius=" + exp_radius);
+		System.out.println("Approx Ratio=" + approx_ratio);
 	}
 	
 	public void output() {

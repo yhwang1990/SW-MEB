@@ -5,28 +5,29 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import model.Point;
-
+import model.PointSet;
+import model.PointSetUtils;
 import simplestream.SimpleStream;
 
 public class SimpleStreamMain {
 
 	public static void main(String[] args) throws IOException {
-		String data_file = args[0];
-		int n = Integer.parseInt(args[1]);
-		int d = Integer.parseInt(args[2]);
+//		String data_file = args[0];
+//		int n = Integer.parseInt(args[1]);
+//		int d = Integer.parseInt(args[2]);
 		
-		streamFromFile(data_file, n, d, 0);
+//		streamFromFile(data_file, n, d, 0);
 		
 //		PointSet pts = PointSetUtils.pointsFromStream(data_file, n, d);
 		
-//		PointSet pts = PointSetUtils.pointsFromStream("../data/normal-100000-100.txt", 100000, 100);
-//		System.out.println("dataset size: " + pts.num);
+		PointSet pts = PointSetUtils.pointsFromStream("../data/normal-100000-100.txt", 100000, 100);
+		System.out.println("dataset size: " + pts.num);
 
-//		SimpleStream simpleStream = new SimpleStream(pts);
+		SimpleStream simpleStream = new SimpleStream(pts);
 
-//		System.out.println("time elapsed: " + simpleStream.time_elapsed + "s");
-//		simpleStream.output();
-//		simpleStream.validate();
+		System.out.println("time elapsed: " + simpleStream.time_elapsed + "s");
+		simpleStream.output();
+		simpleStream.validate(pts);
 	}
 	
 	private static void streamFromFile(String filename, int n, int d, int start_id) throws IOException {
@@ -60,7 +61,6 @@ public class SimpleStreamMain {
 		
 		System.out.println("time elapsed: " + simpleStream.time_elapsed + "s");
 		simpleStream.output();
-		simpleStream.validate();
 	}
 
 }

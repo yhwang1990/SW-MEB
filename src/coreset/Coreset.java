@@ -1,6 +1,7 @@
 package coreset;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import model.Point;
 import model.PointSet;
@@ -81,7 +82,7 @@ public class Coreset {
 		}
 	}
 
-	private Point findFarthestPoint(Point p, ArrayList<Point> points) {
+	private Point findFarthestPoint(Point p, List<Point> points) {
 		double max_sq_dist = 0.0;
 		Point farthestPoint = null;
 		for (Point point : points) {
@@ -96,7 +97,7 @@ public class Coreset {
 		return farthestPoint;
 	}
 
-	private Point findFarthestPoint(ArrayList<Point> points) {
+	private Point findFarthestPoint(List<Point> points) {
 		double max_sq_dist = 0.0;
 		Point farthestPoint = null;
 		for (Point point : points) {
