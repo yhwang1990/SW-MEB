@@ -64,71 +64,14 @@ public class BlurredBallCover {
 				
 				System.out.println(this.blurred_cover.getFirst().ball_radius + "," + this.union_coreset.size());
 			} else {
-				boolean need_update = false;
-				for (Point p : next_batch.points) {
-					boolean point_in_ballcover = false;
-					Iterator<BlurredBall> iter = this.blurred_cover.iterator();
-					while (iter.hasNext()) {
-						BlurredBall cur_ball = iter.next();
-						if (Math.sqrt(Util.sq_dist(p.data, cur_ball.ball_center)) <= (1.0 + this.eps) * cur_ball.ball_radius) {
-							point_in_ballcover = true;
-							break;
-						}
-					}
-					if (! point_in_ballcover) {
-						need_update = true;
-						break;
-					}
-				}
-				
-				if (need_update) {
-					HashSet<Point> candidate = new HashSet<>();
-					candidate.addAll(this.union_coreset);
-					candidate.addAll(next_batch.points);
-					int next_ball_id = this.blurred_cover.getFirst().ball_id + 1;
-					BlurredBall nextBall = new BlurredBall(next_ball_id, new PointSet(this.dim, new ArrayList<>(candidate)));
-					
-					this.union_coreset.addAll(nextBall.ball_coreset);
-					this.blurred_cover.addFirst(nextBall);
-					
-					System.out.println(this.blurred_cover.getFirst().ball_radius + "," + this.union_coreset.size());
-				}
+				append(next_batch);
 			}
 		}
 		
 		if (batch_id * BATCH_SIZE < pointSet.points.size()) {
 			PointSet next_batch = new PointSet(this.dim, pointSet.points.subList(batch_id * BATCH_SIZE, pointSet.points.size()));
 			System.out.println(next_batch.points.get(0).idx);
-			
-			boolean need_update = false;
-			for (Point p : next_batch.points) {
-				boolean point_in_ballcover = false;
-				Iterator<BlurredBall> iter = this.blurred_cover.iterator();
-				while (iter.hasNext()) {
-					BlurredBall cur_ball = iter.next();
-					if (Math.sqrt(Util.sq_dist(p.data,cur_ball.ball_center)) <= (1.0 + this.eps) * cur_ball.ball_radius) {
-						point_in_ballcover = true;
-						break;
-					}
-				}
-				if (! point_in_ballcover) {
-					need_update = true;
-					break;
-				}
-			}
-			
-			if (need_update) {
-				HashSet<Point> candidate = new HashSet<>();
-				candidate.addAll(this.union_coreset);
-				candidate.addAll(next_batch.points);
-				int next_ball_id = this.blurred_cover.getFirst().ball_id + 1;
-				BlurredBall nextBall = new BlurredBall(next_ball_id, new PointSet(this.dim, new ArrayList<>(candidate)));
-				
-				this.union_coreset.addAll(nextBall.ball_coreset);
-				this.blurred_cover.addFirst(nextBall);
-				
-				System.out.println(this.blurred_cover.getFirst().ball_radius + "," + this.union_coreset.size());
-			}
+			append(next_batch);
 		}
 		long t2 = System.nanoTime();
 		this.time_elapsed = (t2 - t1) / 1e9;

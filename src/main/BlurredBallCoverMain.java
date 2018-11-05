@@ -10,28 +10,28 @@ import ballcover.BlurredBallCover;
 
 import model.Point;
 import model.PointSet;
-//import model.PointSetUtils;
+import model.PointSetUtils;
 
 public class BlurredBallCoverMain {
 
 	public static void main(String[] args) throws IOException {
-		String data_file = args[0];
-		int n = Integer.parseInt(args[1]);
-		int d = Integer.parseInt(args[2]);
-		double eps = Double.parseDouble(args[3]);
-		streamFromFile(data_file, n, d, 0, eps);
+//		String data_file = args[0];
+//		int n = Integer.parseInt(args[1]);
+//		int d = Integer.parseInt(args[2]);
+//		double eps = Double.parseDouble(args[3]);
+//		streamFromFile(data_file, n, d, 0, eps);
 		
 //		PointSet pts = PointSetUtils.pointsFromStream(data_file, n, d);
 		
-//		PointSet pts = PointSetUtils.pointsFromStream("../data/normal-100000-100.txt", 100000, 100);
-//		double eps = 1e-5;
-//		System.out.println("dataset size: " + pts.num);
+		PointSet pts = PointSetUtils.pointsFromStream("../data/normal-100000-100.txt", 100000, 100);
+		double eps = 1e-3;
+		System.out.println("dataset size: " + pts.num);
 
-//		BlurredBallCover coreset = new BlurredBallCover(pts, eps);
+		BlurredBallCover coreset = new BlurredBallCover(pts, eps);
 
-//		System.out.println("time elapsed: " + coreset.time_elapsed + "s");
-//		coreset.output();
-//		coreset.validate(pts);
+		System.out.println("time elapsed: " + coreset.time_elapsed + "s");
+		coreset.output();
+		coreset.validate(pts);
 	}
 	
 	private static void streamFromFile(String filename, int n, int d, int start_id, double eps) throws IOException {
