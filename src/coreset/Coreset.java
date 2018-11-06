@@ -11,7 +11,7 @@ public class Coreset {
 
 	public int dim;
 	public ArrayList<Point> core_points;
-	public final double[] center;
+	public double[] center;
 	public double radius;
 
 	public double time_elapsed = 0.0;
