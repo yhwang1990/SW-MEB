@@ -17,7 +17,7 @@ public class DynamicMEBMain {
 //		PointSet pts = PointSetUtils.pointsFromStream(data_file, n, d);
 		
 		PointSet pts = PointSetUtils.pointsFromStream("../data/normal-100000-100.txt", 100000, 100);
-		double eps = 1e-2;
+		double eps = 1e-3;
 		System.out.println("dataset size: " + pts.num);
 
 		DynamicMEB coreset = new DynamicMEB(new PointSet(100, pts.points.subList(0, 1000)), eps);

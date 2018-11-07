@@ -194,6 +194,8 @@ public class DynamicMEB {
 				this.next_level = next_level;
 				next_level.prev_level = this;
 				next_level.preprocess();
+			} else {
+				coreset = this.union_coreset;
 			}
 			
 			this.counter = Math.max(1, (int) (DELTA * this.P.size()));
