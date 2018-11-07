@@ -162,7 +162,6 @@ public class DynamicMEB {
 			Iterator<Point> iter = this.P.iterator();
 			Point p0 = iter.next();
 			this.level_coreset.add(p0);
-			this.Q.remove(p0);
 			System.arraycopy(p0.data, 0, this.level_center, 0, dim);
 			
 			boolean has_ext_points = true;
@@ -226,7 +225,7 @@ public class DynamicMEB {
 		}
 		
 		void insert(Point p) {
-			if (this.P.size() < C) {
+			if (this.P.size() <= C) {
 				this.P.add(p);
 				this.level_coreset.add(p);
 				this.union_coreset.add(p);
