@@ -11,9 +11,9 @@ import model.PointSet;
 import model.Util;
 //import model.PointSet;
 //import model.PointSetUtils;
-import slidingwindow.SWMEB;
+import slidingwindow.SWMEBPlus;
 
-public class SWMEBMain {
+public class SWMEBPlusMain {
 
 	public static void main(String[] args) throws IOException {
 //		String data_file = args[0];
@@ -39,7 +39,7 @@ public class SWMEBMain {
 		br.readLine();
 		String line = null;
 		
-		SWMEB swmeb = new SWMEB(1e-3, 1e-3);
+		SWMEBPlus swmeb = new SWMEBPlus(d, 1e-3, 1e-3);
 		
 		List<Point> buffer = new ArrayList<>();
 		for (int i = 0; i < n; ++i) {

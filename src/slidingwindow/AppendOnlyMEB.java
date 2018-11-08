@@ -36,6 +36,18 @@ public class AppendOnlyMEB {
 //		System.out.println(this.radius + "," + this.core_points.size());
 	}
 	
+	public AppendOnlyMEB(int idx, AppendOnlyMEB inst) {
+		this.idx = idx;
+		this.dim = inst.dim;
+		this.eps = inst.eps;
+		this.core_points = new ArrayList<>(inst.core_points);
+		this.center = new double[this.dim];
+		System.arraycopy(inst.center, 0, this.center, 0, this.dim);
+		this.radius = inst.radius;
+		
+		this.time_elapsed = 0;
+	}
+	
 	public AppendOnlyMEB(PointSet pointSet, double eps) {
 		this.idx = pointSet.points.get(0).idx;
 		this.dim = pointSet.dim;
@@ -79,7 +91,7 @@ public class AppendOnlyMEB {
 			this.core_points.addAll(new_core_points);
 			solveApxBall();
 			
-//			System.out.println(this.radius + "," + this.core_points.size());
+//			System.out.println(points.get(0).idx + "," + this.radius + "," + this.core_points.size());
 		}
 		long t2 = System.nanoTime();
 		this.time_elapsed += (t2 - t1) / 1e9;

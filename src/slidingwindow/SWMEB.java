@@ -17,7 +17,7 @@ public class SWMEB {
 	LinkedList<Integer> index;
 	HashMap<Integer, AppendOnlyMEB> instances;
 	
-	public double time_elapsed;
+	public double time_elapsed, deletion;
 
 	public SWMEB(double eps1, double eps2) {
 		this.cur_id = -1;
@@ -57,7 +57,7 @@ public class SWMEB {
 					to_delete.add(index.get(i));
 				}
 			}
-			beta *= 2;
+			beta *= 3;
 			beta = Math.min(beta, Util.BETA_MAX);
 		}
 
