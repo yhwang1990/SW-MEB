@@ -12,9 +12,6 @@ import model.PointSet;
 import model.Util;
 
 public class BlurredBallCover {
-	
-	public static final int BATCH_SIZE = 100;
-	
 	public int dim;
 	public HashSet<Point> union_coreset;
 	public double[] center;
@@ -53,8 +50,8 @@ public class BlurredBallCover {
 		
 		long t1 = System.nanoTime();
 		int batch_id = 0;
-		for (batch_id = 0; batch_id < pointSet.points.size() / BATCH_SIZE; batch_id++) {
-			PointSet next_batch = new PointSet(this.dim, pointSet.points.subList(batch_id * BATCH_SIZE, (batch_id + 1) * BATCH_SIZE));
+		for (batch_id = 0; batch_id < pointSet.points.size() / Util.BATCH_SIZE; batch_id++) {
+			PointSet next_batch = new PointSet(this.dim, pointSet.points.subList(batch_id * Util.BATCH_SIZE, (batch_id + 1) * Util.BATCH_SIZE));
 			System.out.println(next_batch.points.get(0).idx);
 			
 			if (this.blurred_cover.isEmpty()) {
@@ -68,8 +65,8 @@ public class BlurredBallCover {
 			}
 		}
 		
-		if (batch_id * BATCH_SIZE < pointSet.points.size()) {
-			PointSet next_batch = new PointSet(this.dim, pointSet.points.subList(batch_id * BATCH_SIZE, pointSet.points.size()));
+		if (batch_id * Util.BATCH_SIZE < pointSet.points.size()) {
+			PointSet next_batch = new PointSet(this.dim, pointSet.points.subList(batch_id * Util.BATCH_SIZE, pointSet.points.size()));
 			System.out.println(next_batch.points.get(0).idx);
 			append(next_batch);
 		}

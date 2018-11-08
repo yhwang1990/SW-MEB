@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import dynamic.DynamicMEB;
 import model.PointSet;
-import model.PointSetUtils;
 
 public class DynamicMEBMain {
 
@@ -16,7 +15,7 @@ public class DynamicMEBMain {
 		
 //		PointSet pts = PointSetUtils.pointsFromStream(data_file, n, d);
 		
-		PointSet pts = PointSetUtils.pointsFromStream("../data/normal-100000-100.txt", 100000, 100);
+		PointSet pts = PointSet.pointsFromStream("../data/normal-100000-100.txt", 100000, 100);
 		double eps = 1e-3;
 		System.out.println("dataset size: " + pts.num);
 

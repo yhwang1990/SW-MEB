@@ -12,9 +12,9 @@ import model.PointSet;
 import model.Util;
 
 public class DynamicMEB {
-	static final int C = 115;
-	static final double ALPHA = 1e-3;
-	static final double DELTA = 1e-3;
+	static int C = 115;
+	static double ALPHA = 1e-3;
+	static double DELTA = 1e-3;
 	
 	static final Random RAND = new Random(0);
 	
