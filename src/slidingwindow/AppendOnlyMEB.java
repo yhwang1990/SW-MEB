@@ -82,7 +82,7 @@ public class AppendOnlyMEB {
 		long t1 = System.nanoTime();
 		ArrayList<Point> new_core_points = new ArrayList<>();
 		for (Point p : points) {
-			if (Math.sqrt(Util.sq_dist(p.data,this.center)) > (1.0 + this.eps) * this.radius) {
+			if (Math.sqrt(Util.dist2(p.data,this.center)) > (1.0 + this.eps) * this.radius) {
 				new_core_points.add(p);
 			}
 		}
@@ -109,7 +109,7 @@ public class AppendOnlyMEB {
 		double sq_radius = this.radius * this.radius;
 		int ext_count = 0;
 		for (Point point : pointSet.points) {
-			double sq_dist = Util.sq_dist(this.center, point.data);
+			double sq_dist = Util.dist2(this.center, point.data);
 
 			if (sq_dist > sq_radius) {
 				ext_count += 1;
@@ -146,7 +146,7 @@ public class AppendOnlyMEB {
 		Point p1 = findFarthestPoint(firstPoint, points);
 		Point p2 = findFarthestPoint(p1, points);
 
-		this.radius = Math.sqrt(Util.sq_dist(p1.data, p2.data)) / 2.0;
+		this.radius = Math.sqrt(Util.dist2(p1.data, p2.data)) / 2.0;
 		for (int i = 0; i < this.dim; i++) {
 			this.center[i] = (p1.data[i] + p2.data[i]) / 2.0;
 		}
@@ -155,7 +155,7 @@ public class AppendOnlyMEB {
 
 		while (true) {
 			Point furthestPoint = findFarthestPoint(points);
-			double max_dist = Math.sqrt(Util.sq_dist(this.center, furthestPoint.data));
+			double max_dist = Math.sqrt(Util.dist2(this.center, furthestPoint.data));
 
 			if (max_dist <= this.radius * (1.0 + this.eps)) {
 				break;
@@ -174,7 +174,7 @@ public class AppendOnlyMEB {
 	private void solveApxBall() {
 		while (true) {
 			Point furthestPoint = findFarthestPoint(this.core_points);
-			double max_dist = Math.sqrt(Util.sq_dist(this.center, furthestPoint.data));
+			double max_dist = Math.sqrt(Util.dist2(this.center, furthestPoint.data));
 			if (max_dist <= this.radius * (1.0 + this.eps / 2.0)) {
 				break;
 			}
@@ -189,7 +189,7 @@ public class AppendOnlyMEB {
 		double max_sq_dist = 0.0;
 		Point farthestPoint = null;
 		for (Point point : points) {
-			double sq_dist = Util.sq_dist(p.data, point.data);
+			double sq_dist = Util.dist2(p.data, point.data);
 			if (sq_dist > max_sq_dist) {
 				max_sq_dist = sq_dist;
 				farthestPoint = point;
@@ -202,7 +202,7 @@ public class AppendOnlyMEB {
 		double max_sq_dist = 0.0;
 		Point farthestPoint = null;
 		for (Point point : points) {
-			double sq_dist = Util.sq_dist(this.center, point.data);
+			double sq_dist = Util.dist2(this.center, point.data);
 			if (sq_dist > max_sq_dist) {
 				max_sq_dist = sq_dist;
 				farthestPoint = point;

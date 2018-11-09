@@ -87,7 +87,7 @@ public class BlurredBallCover {
 			Iterator<BlurredBall> iter = this.blurred_cover.iterator();
 			while (iter.hasNext()) {
 				BlurredBall cur_ball = iter.next();
-				if (Math.sqrt(Util.sq_dist(p.data,cur_ball.ball_center)) <= (1.0 + this.eps) * cur_ball.ball_radius) {
+				if (Math.sqrt(Util.dist2(p.data,cur_ball.ball_center)) <= (1.0 + this.eps) * cur_ball.ball_radius) {
 					point_in_ballcover = true;
 					break;
 				}
@@ -126,7 +126,7 @@ public class BlurredBallCover {
 		double sq_radius = this.radius * this.radius;
 		int ext_count = 0;
 		for (Point point : pointSet.points) {
-			double sq_dist = Util.sq_dist(this.center, point.data);
+			double sq_dist = Util.dist2(this.center, point.data);
 
 			if (sq_dist > sq_radius) {
 				ext_count += 1;

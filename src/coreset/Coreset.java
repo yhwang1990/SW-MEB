@@ -37,7 +37,7 @@ public class Coreset {
 		Point p1 = findFarthestPoint(firstPoint, pointSet.points);
 		Point p2 = findFarthestPoint(p1, pointSet.points);
 
-		this.radius = Math.sqrt(Util.sq_dist(p1.data, p2.data)) / 2.0;
+		this.radius = Math.sqrt(Util.dist2(p1.data, p2.data)) / 2.0;
 		for (int i = 0; i < this.dim; i++) {
 			this.center[i] = (p1.data[i] + p2.data[i]) / 2.0;
 		}
@@ -48,7 +48,7 @@ public class Coreset {
 
 		while (true) {
 			Point furthestPoint = findFarthestPoint(pointSet.points);
-			double max_dist = Math.sqrt(Util.sq_dist(center, furthestPoint.data));
+			double max_dist = Math.sqrt(Util.dist2(center, furthestPoint.data));
 
 			if (max_dist <= this.radius * (1.0 + this.eps)) {
 				break;
@@ -69,7 +69,7 @@ public class Coreset {
 	private void solveApxBall() {
 		while (true) {
 			Point furthestPoint = findFarthestPoint(this.core_points);
-			double max_dist = Math.sqrt(Util.sq_dist(center, furthestPoint.data));
+			double max_dist = Math.sqrt(Util.dist2(center, furthestPoint.data));
 
 			if (max_dist <= this.radius * (1.0 + this.eps / 2.0)) {
 				break;
@@ -86,7 +86,7 @@ public class Coreset {
 		double max_sq_dist = 0.0;
 		Point farthestPoint = null;
 		for (Point point : points) {
-			double sq_dist = Util.sq_dist(p.data, point.data);
+			double sq_dist = Util.dist2(p.data, point.data);
 
 			if (sq_dist > max_sq_dist) {
 				max_sq_dist = sq_dist;
@@ -101,7 +101,7 @@ public class Coreset {
 		double max_sq_dist = 0.0;
 		Point farthestPoint = null;
 		for (Point point : points) {
-			double sq_dist = Util.sq_dist(this.center, point.data);
+			double sq_dist = Util.dist2(this.center, point.data);
 
 			if (sq_dist > max_sq_dist) {
 				max_sq_dist = sq_dist;
@@ -117,7 +117,7 @@ public class Coreset {
 		double sq_radius = this.radius * this.radius;
 		int ext_count = 0;
 		for (Point point : pointSet.points) {
-			double sq_dist = Util.sq_dist(this.center, point.data);
+			double sq_dist = Util.dist2(this.center, point.data);
 
 			if (sq_dist > sq_radius) {
 				ext_count += 1;

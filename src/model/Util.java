@@ -9,7 +9,7 @@ public class Util {
 	public static int CHUNK_SIZE = W / 10;
 	public static double GAMMA = 0.1;
 	
-	public static double sq_dist(double[] d1, double[] d2) {
+	public static double dist2(double[] d1, double[] d2) {
 		double sum_sq = 0.0;
 		for (int i = 0; i < d1.length; i++) {
 			sum_sq += ((d1[i] - d2[i]) * (d1[i] - d2[i]));
@@ -18,10 +18,10 @@ public class Util {
 	}
 	
 	public static double rbf_eval(double[] d1, double[] d2) {
-		return Math.exp(-GAMMA * sq_dist(d1, d2));
+		return Math.exp(-GAMMA * dist2(d1, d2));
 	}
 	
-	public static double sparse_sq_dist(Feature[] d1, Feature[] d2) {
+	public static double sparse_dist2(Feature[] d1, Feature[] d2) {
 		double sum_sq = 0;
 		int len1 = d1.length;
 		int len2 = d2.length;
@@ -54,6 +54,6 @@ public class Util {
 	}
 	
 	public static double sparse_rbf_eval(Feature[] d1, Feature[] d2) {
-		return Math.exp(-GAMMA * sparse_sq_dist(d1, d2));
+		return Math.exp(-GAMMA * sparse_dist2(d1, d2));
 	}
 }

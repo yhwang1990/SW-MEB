@@ -67,7 +67,7 @@ public class DynamicMEB {
 		double sq_radius = this.radius * this.radius;
 		int ext_count = 0;
 		for (Point point : pointSet.points) {
-			double sq_dist = Util.sq_dist(this.center, point.data);
+			double sq_dist = Util.dist2(this.center, point.data);
 
 			if (sq_dist > sq_radius) {
 				ext_count += 1;
@@ -250,7 +250,7 @@ public class DynamicMEB {
 			int result_size = Math.max(1, (int) (ALPHA * this.P.size()));
 			PriorityQueue<DistItem> queue = new PriorityQueue<>(result_size + 1);
 			for (Point p : this.Q) {
-				double dist = Math.sqrt(Util.sq_dist(this.level_center, p.data));
+				double dist = Math.sqrt(Util.dist2(this.level_center, p.data));
 				if (dist > (1 + eps) * this.level_radius) {
 					if (queue.size() < result_size) {
 						queue.offer(new DistItem(p, dist));
@@ -272,7 +272,7 @@ public class DynamicMEB {
 		private void solveApxBall() {
 			while (true) {
 				Point furthestPoint = findFarthestPoint(this.level_coreset);
-				double max_dist = Math.sqrt(Util.sq_dist(this.level_center, furthestPoint.data));
+				double max_dist = Math.sqrt(Util.dist2(this.level_center, furthestPoint.data));
 
 				if (max_dist <= this.level_radius * (1.0 + eps / 2.0)) {
 					break;
@@ -289,7 +289,7 @@ public class DynamicMEB {
 			double max_sq_dist = 0.0;
 			Point farthestPoint = null;
 			for (Point point : points) {
-				double sq_dist = Util.sq_dist(this.level_center, point.data);
+				double sq_dist = Util.dist2(this.level_center, point.data);
 
 				if (sq_dist > max_sq_dist) {
 					max_sq_dist = sq_dist;

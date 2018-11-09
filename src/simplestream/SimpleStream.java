@@ -56,7 +56,7 @@ public class SimpleStream {
 	
 	public void append(Point p) {
 		long t1 = System.nanoTime();
-		double dist = Math.sqrt(Util.sq_dist(this.center, p.data));
+		double dist = Math.sqrt(Util.dist2(this.center, p.data));
 		if (dist > this.radius) {
 			this.core_points.add(p);
 			
@@ -78,7 +78,7 @@ public class SimpleStream {
 		
 		double max_sq_dist = 0.0;
 		for (Point point : pointSet.points) {
-			double sq_dist = Util.sq_dist(this.center, point.data);
+			double sq_dist = Util.dist2(this.center, point.data);
 
 			if (sq_dist > max_sq_dist) {
 				max_sq_dist = sq_dist;
