@@ -1,26 +1,22 @@
-package main;
+package test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import model.Point;
-import model.PointSet;
-import model.Util;
 //import model.PointSet;
 //import model.PointSetUtils;
-import slidingwindow.SWMEBPlus;
+import simplestream.SimpleStream;
 
-public class SWMEBPlusMain {
+public class SimpleStreamMain {
 
 	public static void main(String[] args) throws IOException {
-//		String data_file = args[0];
-//		int n = Integer.parseInt(args[1]);
-//		int d = Integer.parseInt(args[2]);
+		String data_file = args[0];
+		int n = Integer.parseInt(args[1]);
+		int d = Integer.parseInt(args[2]);
 		
-		streamFromFile("../data/normal-100000-100.txt", 100000, 100);
+		streamFromFile(data_file, n, d, 0);
 		
 //		PointSet pts = PointSetUtils.pointsFromStream(data_file, n, d);
 		
@@ -34,32 +30,37 @@ public class SWMEBPlusMain {
 //		simpleStream.validate(pts);
 	}
 	
-	private static void streamFromFile(String filename, int n, int d) throws IOException {
+	private static void streamFromFile(String filename, int n, int d, int start_id) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		br.readLine();
 		String line = null;
 		
-		SWMEBPlus swmeb = new SWMEBPlus(d, 1e-3, 1e-3);
-		
-		List<Point> buffer = new ArrayList<>();
-		for (int i = 0; i < n; ++i) {
+		for (int i = 0; i < start_id; ++i) {
 			line = br.readLine();
-			String[] tokens = line.split(" ");
+		}
+		System.out.println(start_id);
+		
+		line = br.readLine();
+		String[] tokens = line.split(" ");
+		double[] data0 = new double[d];
+		for (int j = 0; j < d; ++j) {
+			data0[j] = Double.parseDouble(tokens[j]);
+		}
+		SimpleStream simpleStream = new SimpleStream(d, new Point(0, data0));
+		
+		for (int i = 1; i < n; ++i) {
+			line = br.readLine();
+			tokens = line.split(" ");
 			double[] data = new double[d];
 			for (int j = 0; j < d; ++j) {
 				data[j] = Double.parseDouble(tokens[j]);
 			}
-			buffer.add(new Point(i, data));
-			
-			if (buffer.size() >= Util.BATCH_SIZE) {
-				swmeb.append(new PointSet(d, buffer));
-				buffer.clear();
-			}
+			simpleStream.append(new Point(i, data));
 		}
 		br.close();
 		
-		System.out.println("time elapsed: " + swmeb.time_elapsed + "s");
-		swmeb.output();
+		System.out.println("time elapsed: " + simpleStream.time_elapsed + "s");
+		simpleStream.output();
 	}
 
 }
