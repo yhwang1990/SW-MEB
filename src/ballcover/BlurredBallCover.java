@@ -131,11 +131,11 @@ public class BlurredBallCover {
 	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("center ");
-		for (int i = 0; i < Util.d - 1; i++) {
-			builder.append(center[i]).append(" ");
-		}
-		builder.append(center[Util.d - 1]).append("\n");
+//		builder.append("center ");
+//		for (int i = 0; i < Util.d - 1; i++) {
+//			builder.append(center[i]).append(" ");
+//		}
+//		builder.append(center[Util.d - 1]).append("\n");
 		builder.append("radius ").append(radius).append("\n");
 		builder.append("time ").append(time_elapsed).append("s\n");
 		return builder.toString();

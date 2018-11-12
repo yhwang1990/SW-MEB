@@ -99,11 +99,11 @@ public class SWMEBPlus {
 		AppendOnlyMEB inst = instances.getFirst();
 		
 		StringBuilder builder = new StringBuilder();
-		builder.append("center ");
-		for (int i = 0; i < Util.d - 1; i++) {
-			builder.append(inst.center[i]).append(" ");
-		}
-		builder.append(inst.center[Util.d - 1]).append("\n");
+//		builder.append("center ");
+//		for (int i = 0; i < Util.d - 1; i++) {
+//			builder.append(inst.center[i]).append(" ");
+//		}
+//		builder.append(inst.center[Util.d - 1]).append("\n");
 		builder.append("radius ").append(inst.radius).append("\n");
 		builder.append("time ").append(time_elapsed).append("s\n");
 		return builder.toString();

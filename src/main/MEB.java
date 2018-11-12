@@ -81,7 +81,7 @@ public class MEB {
 				
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
 					AppendOnlyMEB inst = new AppendOnlyMEB(new ArrayList<>(buffer), eps);
-					System.out.println("AppendOnly " + data_file + " " + Util.W + " " + Util.d);
+					System.out.println("AppendOnly " + data_file + " " + Util.W + " " + Util.d + " " + eps);
 					System.out.println(i);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
@@ -115,7 +115,7 @@ public class MEB {
 				
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
 					BlurredBallCover inst = new BlurredBallCover(new ArrayList<>(buffer), eps);
-					System.out.println("BlurredBallCover " + data_file + " " + Util.W + " " + Util.d);
+					System.out.println("BlurredBallCover " + data_file + " " + Util.W + " " + Util.d + " " + eps);
 					System.out.println(i);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
@@ -149,7 +149,7 @@ public class MEB {
 				
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
 					Coreset inst = new Coreset(new ArrayList<>(buffer), eps);
-					System.out.println("Coreset " + data_file + " " + Util.W + " " + Util.d);
+					System.out.println("Coreset " + data_file + " " + Util.W + " " + Util.d + " " + eps);
 					System.out.println(i);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
@@ -195,7 +195,7 @@ public class MEB {
 				
 				if (i + 1 > Util.W && (i - Util.W + 1) % offset == 0) {
 					inst.approxMEB();
-					System.out.println("Dynamic " + data_file + " " + Util.W + " " + Util.d);
+					System.out.println("Dynamic " + data_file + " " + Util.W + " " + Util.d + " " + eps);
 					System.out.println(i);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
@@ -273,7 +273,7 @@ public class MEB {
 				}
 				
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
-					System.out.println("SWMEB " + data_file + " " + Util.W + " " + Util.d);
+					System.out.println("SWMEB " + data_file + " " + Util.W + " " + Util.d + " " + eps1);
 					System.out.println(i);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
@@ -317,7 +317,7 @@ public class MEB {
 				}
 				
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
-					System.out.println("SWMEB+ " + data_file + " " + Util.W + " " + Util.d);
+					System.out.println("SWMEB+ " + data_file + " " + Util.W + " " + Util.d + " " + eps1);
 					System.out.println(i);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
