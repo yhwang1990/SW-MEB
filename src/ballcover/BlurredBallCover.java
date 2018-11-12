@@ -33,7 +33,7 @@ public class BlurredBallCover {
 		this.union_coreset.addAll(initBall.ball_coreset);
 		this.blurred_cover.addFirst(initBall);
 				
-		System.out.println(this.blurred_cover.getFirst().ball_radius + "," + this.union_coreset.size());
+//		System.out.println(this.blurred_cover.getFirst().ball_radius + "," + this.union_coreset.size());
 		long t2 = System.nanoTime();
 		this.time_elapsed += (t2 - t1) / 1e9;
 	}
@@ -49,14 +49,14 @@ public class BlurredBallCover {
 		int batch_id = 0;
 		for (batch_id = 0; batch_id < pointSet.size() / Util.BATCH_SIZE; batch_id++) {
 			List<Point> next_batch = pointSet.subList(batch_id * Util.BATCH_SIZE, (batch_id + 1) * Util.BATCH_SIZE);
-			System.out.println(next_batch.get(0).idx);
+//			System.out.println(next_batch.get(0).idx);
 			
 			if (this.blurred_cover.isEmpty()) {
 				BlurredBall initBall = new BlurredBall(0, next_batch);
 				this.union_coreset.addAll(initBall.ball_coreset);
 				this.blurred_cover.addFirst(initBall);
 				
-				System.out.println(this.blurred_cover.getFirst().ball_radius + "," + this.union_coreset.size());
+//				System.out.println(this.blurred_cover.getFirst().ball_radius + "," + this.union_coreset.size());
 			} else {
 				append(next_batch);
 			}
@@ -64,7 +64,7 @@ public class BlurredBallCover {
 		
 		if (batch_id * Util.BATCH_SIZE < pointSet.size()) {
 			List<Point> next_batch = pointSet.subList(batch_id * Util.BATCH_SIZE, pointSet.size());
-			System.out.println(next_batch.get(0).idx);
+//			System.out.println(next_batch.get(0).idx);
 			append(next_batch);
 		}
 		long t2 = System.nanoTime();
@@ -76,7 +76,7 @@ public class BlurredBallCover {
 	}
 	
 	public void append(List<Point> pointSet) {
-		System.out.println(pointSet.get(0).idx);
+//		System.out.println(pointSet.get(0).idx);
 		long t1 = System.nanoTime();
 		boolean need_update = false;
 		for (Point p : pointSet) {
@@ -105,7 +105,7 @@ public class BlurredBallCover {
 			this.union_coreset.addAll(nextBall.ball_coreset);
 			this.blurred_cover.addFirst(nextBall);
 			
-			System.out.println(this.blurred_cover.getFirst().ball_radius + "," + this.union_coreset.size());
+//			System.out.println(this.blurred_cover.getFirst().ball_radius + "," + this.union_coreset.size());
 		}
 		long t2 = System.nanoTime();
 		this.time_elapsed += (t2 - t1) / 1e9;
@@ -113,45 +113,38 @@ public class BlurredBallCover {
 	
 	public void approxMEB() {
 		Coreset coreset = new Coreset(new ArrayList<>(this.union_coreset), 1e-6);
-		
 		this.center = coreset.center;
 		this.radius = coreset.radius;
 	}
 	
 	public void validate(List<Point> pointSet) {
 		double max_sq_dist = 0.0;
-		double sq_radius = this.radius * this.radius;
-		int ext_count = 0;
 		for (Point point : pointSet) {
-			double sq_dist = Util.dist2(this.center, point.data);
-
-			if (sq_dist > sq_radius) {
-				ext_count += 1;
-			}
-
+			double sq_dist = Util.dist2(center, point.data);
 			if (sq_dist > max_sq_dist) {
 				max_sq_dist = sq_dist;
 			}
 		}
-
 		double exp_radius = Math.sqrt(max_sq_dist);
-		double approx_ratio = exp_radius / this.radius;
-
-		System.out.println("Actual Radius=" + exp_radius);
-		System.out.println("Approx Ratio=" + approx_ratio);
-		System.out.println("Exterior Count=" + ext_count);
+		System.out.println("Actual Radius " + exp_radius);
+	}
+	
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("center ");
+		for (int i = 0; i < Util.d - 1; i++) {
+			builder.append(center[i]).append(" ");
+		}
+		builder.append(center[Util.d - 1]).append("\n");
+		builder.append("radius ").append(radius).append("\n");
+		builder.append("time ").append(time_elapsed).append("s\n");
+		return builder.toString();
 	}
 
 	public void output() {
 		StringBuilder builder = new StringBuilder();
-//		builder.append("center=(");
-//		for (int i = 0; i < this.dim - 1; i++) {
-//			builder.append(this.center[i]).append(", ");
-//		}
-//		builder.append(this.center[this.dim - 1]).append(")\n");
 		builder.append("radius=").append(this.radius).append("\n");
 		builder.append("squared radius=").append(this.radius * this.radius).append("\n");
-
 		System.out.print(builder.toString());
 	}
 	

@@ -104,38 +104,32 @@ public class Coreset {
 
 	public void validate(List<Point> pointSet) {
 		double max_sq_dist = 0.0;
-		double sq_radius = radius * radius;
-		int ext_count = 0;
 		for (Point point : pointSet) {
 			double sq_dist = Util.dist2(center, point.data);
-
-			if (sq_dist > sq_radius) {
-				ext_count += 1;
-			}
-
 			if (sq_dist > max_sq_dist) {
 				max_sq_dist = sq_dist;
 			}
 		}
-
 		double exp_radius = Math.sqrt(max_sq_dist);
-		double approx_ratio = exp_radius / radius;
-
-		System.out.println("Actual Radius=" + exp_radius);
-		System.out.println("Approx Ratio=" + approx_ratio);
-		System.out.println("Exterior Count=" + ext_count);
+		System.out.println("Actual Radius " + exp_radius);
+	}
+	
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("center ");
+		for (int i = 0; i < Util.d - 1; i++) {
+			builder.append(center[i]).append(" ");
+		}
+		builder.append(center[Util.d - 1]).append("\n");
+		builder.append("radius ").append(radius).append("\n");
+		builder.append("time ").append(time_elapsed).append("s\n");
+		return builder.toString();
 	}
 
 	public void output() {
 		StringBuilder builder = new StringBuilder();
-//		builder.append("center=(");
-//		for (int i = 0; i < this.dim - 1; i++) {
-//			builder.append(this.center[i]).append(", ");
-//		}
-//		builder.append(this.center[this.dim - 1]).append(")\n");
 		builder.append("radius=").append(radius).append("\n");
 		builder.append("squared radius=").append(radius * radius).append("\n");
-
 		System.out.print(builder.toString());
 	}
 }

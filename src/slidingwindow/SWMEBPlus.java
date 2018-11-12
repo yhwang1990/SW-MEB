@@ -46,13 +46,13 @@ public class SWMEBPlus {
 			buffer.clear();
 		}
 		
-		if (cur_id % 10000 == 9999) {
-			System.out.println(cur_id);
-			for (AppendOnlyMEB inst : instances) {
-				System.out.print(inst.idx + ":" + inst.radius + " ");
-			}
-			System.out.println();
-		}
+//		if (cur_id % 10000 == 9999) {
+//			System.out.println(cur_id);
+//			for (AppendOnlyMEB inst : instances) {
+//				System.out.print(inst.idx + ":" + inst.radius + " ");
+//			}
+//			System.out.println();
+//		}
 		long t2 = System.nanoTime();
 		time_elapsed += (t2 - t1) / 1e9;
 	}
@@ -93,6 +93,20 @@ public class SWMEBPlus {
 
 	public void output() {
 		instances.getFirst().output();
+	}
+	
+	public String toString() {
+		AppendOnlyMEB inst = instances.getFirst();
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append("center ");
+		for (int i = 0; i < Util.d - 1; i++) {
+			builder.append(inst.center[i]).append(" ");
+		}
+		builder.append(inst.center[Util.d - 1]).append("\n");
+		builder.append("radius ").append(inst.radius).append("\n");
+		builder.append("time ").append(time_elapsed).append("s\n");
+		return builder.toString();
 	}
 
 }
