@@ -5,13 +5,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import model.Point;
-import model.PointSet;
 import model.Util;
 
 public class SWMEBPlus {
 	
 	int cur_id;
-	int dim;
 	private double eps1, eps2;
 	
 	LinkedList<AppendOnlyMEB> instances;
@@ -19,9 +17,8 @@ public class SWMEBPlus {
 	
 	public double time_elapsed;
 
-	public SWMEBPlus(int d, double eps1, double eps2) {
+	public SWMEBPlus(double eps1, double eps2) {
 		this.cur_id = -1;
-		this.dim = d;
 		this.eps1 = eps1;
 		this.eps2 = eps2;
 		
@@ -29,20 +26,20 @@ public class SWMEBPlus {
 		this.instances = new LinkedList<>();
 	}
 
-	public void append(PointSet pointSet) {
+	public void append(List<Point> pointSet) {
 		long t1 = System.nanoTime();
-		cur_id = pointSet.points.get(Util.BATCH_SIZE - 1).idx;
+		cur_id = pointSet.get(Util.BATCH_SIZE - 1).idx;
 		while (! instances.isEmpty() && instances.getFirst().idx <= cur_id - Util.W) {
 			instances.removeFirst();
 		}
 
 		if (instances.size() > 0) {
 			for (AppendOnlyMEB inst : instances) {
-				inst.append(pointSet.points);
+				inst.append(pointSet);
 			}
 		}
 		
-		buffer.addAll(pointSet.points);
+		buffer.addAll(pointSet);
 		
 		if (buffer.size() >= Util.CHUNK_SIZE) {
 			addInstances(buffer);
@@ -63,7 +60,7 @@ public class SWMEBPlus {
 	private void addInstances(List<Point> buffer) {
 		LinkedList<AppendOnlyMEB> new_instances = new LinkedList<>();
 		int init_batch_id = buffer.size() - Util.BATCH_SIZE;
-		AppendOnlyMEB baseInstance = new AppendOnlyMEB(new PointSet(dim, buffer.subList(init_batch_id, init_batch_id + Util.BATCH_SIZE)), eps1, true);
+		AppendOnlyMEB baseInstance = new AppendOnlyMEB(buffer.subList(init_batch_id, init_batch_id + Util.BATCH_SIZE), eps1, true);
 //		System.out.println(baseInstance.idx);
 		
 		double beta = Util.BETA_MAX / 2;
@@ -90,7 +87,7 @@ public class SWMEBPlus {
 		instances.getFirst().approxMEB();
 	}
 	
-	public void validate(PointSet pointSet) {
+	public void validate(List<Point> pointSet) {
 		instances.getFirst().validate(pointSet);
 	}
 

@@ -1,10 +1,11 @@
 package test;
 
 import java.io.IOException;
+import java.util.List;
 
 import coreset.Coreset;
-
-import model.PointSet;
+import model.Point;
+import model.Util;
 
 public class CoresetMEBMain {
 
@@ -13,10 +14,10 @@ public class CoresetMEBMain {
 		int n = Integer.parseInt(args[1]);
 		int d = Integer.parseInt(args[2]);
 		double eps = Double.parseDouble(args[3]);
-		PointSet pts = PointSet.pointsFromStream(data_file, n, d);
+		List<Point> pts = Util.pointsFromStream(data_file, n, d);
 		
 //		PointSet pts = PointSetUtils.pointsFromStream("../data/normal-100000-100.txt", 100000, 100);
-		System.out.println("dataset size: " + pts.num);
+		System.out.println("dataset size: " + pts.size());
 
 		Coreset coreset = new Coreset(pts, eps);
 

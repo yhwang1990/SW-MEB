@@ -6,13 +6,11 @@ import java.util.List;
 import coreset.Coreset;
 
 import model.Point;
-import model.PointSet;
 import model.Util;
 
 public class AppendOnlyMEB {
 	
 	public int idx;
-	public int dim;
 	public ArrayList<Point> core_points;
 	public double[] center;
 	public double radius;
@@ -21,16 +19,15 @@ public class AppendOnlyMEB {
 
 	private double eps;
 	
-	public AppendOnlyMEB(PointSet initPointSet, double eps, boolean append_mode) {
-		this.idx = initPointSet.points.get(0).idx;
-		this.dim = initPointSet.dim;
+	public AppendOnlyMEB(List<Point> initPointSet, double eps, boolean append_mode) {
+		this.idx = initPointSet.get(0).idx;
 		this.eps = eps;
 		this.core_points = new ArrayList<>();
-		this.center = new double[this.dim];
+		this.center = new double[Util.d];
 		this.radius = 0.0;
 		
 		long t1 = System.nanoTime();
-		coresetConstruct(initPointSet.points);	
+		coresetConstruct(initPointSet);	
 		long t2 = System.nanoTime();
 		this.time_elapsed += (t2 - t1) / 1e9;
 //		System.out.println(this.radius + "," + this.core_points.size());
@@ -38,42 +35,38 @@ public class AppendOnlyMEB {
 	
 	public AppendOnlyMEB(int idx, AppendOnlyMEB inst) {
 		this.idx = idx;
-		this.dim = inst.dim;
 		this.eps = inst.eps;
 		this.core_points = new ArrayList<>(inst.core_points);
-		this.center = new double[this.dim];
-		System.arraycopy(inst.center, 0, this.center, 0, this.dim);
+		this.center = new double[Util.d];
+		System.arraycopy(inst.center, 0, this.center, 0, Util.d);
 		this.radius = inst.radius;
 		
 		this.time_elapsed = 0;
 	}
 	
-	public AppendOnlyMEB(PointSet pointSet, double eps) {
-		this.idx = pointSet.points.get(0).idx;
-		this.dim = pointSet.dim;
+	public AppendOnlyMEB(List<Point> pointSet, double eps) {
+		this.idx = pointSet.get(0).idx;
 		this.eps = eps;
 		this.core_points = new ArrayList<>();
-		this.center = new double[this.dim];
+		this.center = new double[Util.d];
 		this.radius = 0.0;
 		
 		long t1 = System.nanoTime();
-		coresetConstruct(pointSet.points.subList(0, Util.BATCH_SIZE));
+		coresetConstruct(pointSet.subList(0, Util.BATCH_SIZE));
 		int batch_id = 1;
-		for (batch_id = 1; batch_id < pointSet.points.size() / Util.BATCH_SIZE; batch_id++) {
-			List<Point> next_batch = pointSet.points.subList(batch_id * Util.BATCH_SIZE, (batch_id + 1) * Util.BATCH_SIZE);
-//			System.out.println(next_batch.get(0).idx);
+		for (batch_id = 1; batch_id < pointSet.size() / Util.BATCH_SIZE; batch_id++) {
+			List<Point> next_batch = pointSet.subList(batch_id * Util.BATCH_SIZE, (batch_id + 1) * Util.BATCH_SIZE);
 			append(next_batch);
 		}
 		
-		if (batch_id * Util.BATCH_SIZE < pointSet.points.size()) {
-			List<Point> next_batch = pointSet.points.subList(batch_id * Util.BATCH_SIZE, pointSet.points.size());
-//			System.out.println(next_batch.get(0).idx);
+		if (batch_id * Util.BATCH_SIZE < pointSet.size()) {
+			List<Point> next_batch = pointSet.subList(batch_id * Util.BATCH_SIZE, pointSet.size());
 			append(next_batch);
 		}
 		long t2 = System.nanoTime();
 		this.time_elapsed = (t2 - t1) / 1e9;
 		
-		Coreset coreset = new Coreset(new PointSet(this.dim, new ArrayList<>(this.core_points)), 1e-6);
+		Coreset coreset = new Coreset(new ArrayList<>(this.core_points), 1e-6);
 		this.center = coreset.center;
 		this.radius = coreset.radius;
 	}
@@ -90,25 +83,23 @@ public class AppendOnlyMEB {
 		if (! new_core_points.isEmpty()) {
 			this.core_points.addAll(new_core_points);
 			solveApxBall();
-			
-//			System.out.println(points.get(0).idx + "," + this.radius + "," + this.core_points.size());
 		}
 		long t2 = System.nanoTime();
 		this.time_elapsed += (t2 - t1) / 1e9;
 	}
 	
 	public void approxMEB() {
-		Coreset coreset = new Coreset(new PointSet(this.dim, new ArrayList<>(this.core_points)), 1e-6);
+		Coreset coreset = new Coreset(new ArrayList<>(this.core_points), 1e-6);
 		
 		this.center = coreset.center;
 		this.radius = coreset.radius;
 	}
 	
-	public void validate(PointSet pointSet) {
+	public void validate(List<Point> pointSet) {
 		double max_sq_dist = 0.0;
 		double sq_radius = this.radius * this.radius;
 		int ext_count = 0;
-		for (Point point : pointSet.points) {
+		for (Point point : pointSet) {
 			double sq_dist = Util.dist2(this.center, point.data);
 
 			if (sq_dist > sq_radius) {
@@ -147,7 +138,7 @@ public class AppendOnlyMEB {
 		Point p2 = findFarthestPoint(p1, points);
 
 		this.radius = Math.sqrt(Util.dist2(p1.data, p2.data)) / 2.0;
-		for (int i = 0; i < this.dim; i++) {
+		for (int i = 0; i < Util.d; i++) {
 			this.center[i] = (p1.data[i] + p2.data[i]) / 2.0;
 		}
 		this.core_points.add(p1);
@@ -162,7 +153,7 @@ public class AppendOnlyMEB {
 			}
 
 			this.radius = (this.radius * this.radius / max_dist + max_dist) / 2.0;
-			for (int i = 0; i < this.dim; i++) {
+			for (int i = 0; i < Util.d; i++) {
 				this.center[i] = furthestPoint.data[i] + (this.radius / max_dist) * (this.center[i] - furthestPoint.data[i]);
 			}
 			this.core_points.add(furthestPoint);
@@ -179,7 +170,7 @@ public class AppendOnlyMEB {
 				break;
 			}
 			this.radius = (this.radius * this.radius / max_dist + max_dist) / 2.0;
-			for (int i = 0; i < this.dim; i++) {
+			for (int i = 0; i < Util.d; i++) {
 				this.center[i] = furthestPoint.data[i] + (this.radius / max_dist) * (this.center[i] - furthestPoint.data[i]);
 			}
 		}

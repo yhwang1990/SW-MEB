@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import model.PointSet;
+import model.Point;
 import model.Util;
 
 public class SWMEB {
@@ -28,16 +28,16 @@ public class SWMEB {
 		this.instances = new HashMap<>();
 	}
 
-	public void append(PointSet pointSet) {
+	public void append(List<Point> pointSet) {
 		long t1 = System.nanoTime();
-		cur_id = pointSet.points.get(Util.BATCH_SIZE - 1).idx;
+		cur_id = pointSet.get(Util.BATCH_SIZE - 1).idx;
 		while (index.size() > 2 && index.get(1).intValue() <= cur_id - Util.W) {
 			instances.remove(index.removeFirst());
 		}
 
 		if (instances.size() > 0) {
 			for (AppendOnlyMEB inst : instances.values()) {
-				inst.append(pointSet.points);
+				inst.append(pointSet);
 			}
 		}
 		
@@ -111,7 +111,7 @@ public class SWMEB {
 		}
 	}
 	
-	public void validate(PointSet pointSet) {
+	public void validate(List<Point> pointSet) {
 		if (index.get(0) >= cur_id - Util.W + 1) {
 			instances.get(index.get(1)).validate(pointSet);
 		} else {

@@ -1,13 +1,25 @@
 package model;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Util {
 	public static final int BATCH_SIZE = 100;
 	
 	public static final double BETA_MAX = 0.1;
 	
 	public static int W = 100000;
+	public static int d = 10;
 	public static int CHUNK_SIZE = W / 10;
 	public static double GAMMA = 0.1;
+	
+	//Parameters for dynamic MEB
+	public static int C = (int) (10 * Math.log(W));
+	public static double ALPHA = 1e-3;
+	public static double DELTA = 1e-3;
 	
 	public static double dist2(double[] d1, double[] d2) {
 		double sum_sq = 0.0;
@@ -21,39 +33,21 @@ public class Util {
 		return Math.exp(-GAMMA * dist2(d1, d2));
 	}
 	
-	public static double sparse_dist2(Feature[] d1, Feature[] d2) {
-		double sum_sq = 0;
-		int len1 = d1.length;
-		int len2 = d2.length;
-		int i = 0;
-		int j = 0;
-		while (i < len1 && j < len2) {
-			if (d1[i].dim == d2[j].dim) {
-				double dist = d1[i++].value - d2[j++].value;
-				sum_sq += (dist * dist);
-			} else if (d1[i].dim > d2[j].dim) {
-				sum_sq += (d2[j].value * d2[j].value);
-				++j;
-			} else {
-				sum_sq += (d1[i].value * d1[i].value);
-				++i;
+	public static final List<Point> pointsFromStream(String data_file, int n, int d) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(data_file));
+		String line = null;
+		ArrayList<Point> points = new ArrayList<>(n);
+		for (int i = 0; i < n; ++i) {
+			line = br.readLine();
+			String[] tokens = line.split(" ");
+			double[] data = new double[d];
+			for (int j = 0; j < d; ++j) {
+				data[j] = Double.parseDouble(tokens[j]);
 			}
+			
+			points.add(i, new Point(i, data));
 		}
-
-		while (i < len1) {
-			sum_sq += (d1[i].value * d1[i].value);
-			++i;
-		}
-
-		while (j < len2) {
-			sum_sq += (d2[j].value * d2[j].value);
-			++j;
-		}
-		
-		return sum_sq;
-	}
-	
-	public static double sparse_rbf_eval(Feature[] d1, Feature[] d2) {
-		return Math.exp(-GAMMA * sparse_dist2(d1, d2));
+		br.close();
+		return points;
 	}
 }

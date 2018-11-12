@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Point;
-import model.PointSet;
 import model.Util;
 
 public class Coreset {
-
-	public int dim;
 	public ArrayList<Point> core_points;
 	public double[] center;
 	public double radius;
@@ -18,10 +15,9 @@ public class Coreset {
 
 	private double eps;
 
-	public Coreset(PointSet pointSet, double eps) {
-		this.dim = pointSet.dim;
-		this.core_points = new ArrayList<>(this.dim);
-		this.center = new double[this.dim];
+	public Coreset(List<Point> pointSet, double eps) {
+		this.core_points = new ArrayList<>(Util.d);
+		this.center = new double[Util.d];
 		this.radius = 0.0;
 
 		this.eps = eps;
@@ -32,52 +28,46 @@ public class Coreset {
 		this.time_elapsed = (t2 - t1) / 1e9;
 	}
 
-	void coresetConstruct(PointSet pointSet) {
-		Point firstPoint = pointSet.points.get(0);
-		Point p1 = findFarthestPoint(firstPoint, pointSet.points);
-		Point p2 = findFarthestPoint(p1, pointSet.points);
+	void coresetConstruct(List<Point> pointSet) {
+		Point firstPoint = pointSet.get(0);
+		Point p1 = findFarthestPoint(firstPoint, pointSet);
+		Point p2 = findFarthestPoint(p1, pointSet);
 
-		this.radius = Math.sqrt(Util.dist2(p1.data, p2.data)) / 2.0;
-		for (int i = 0; i < this.dim; i++) {
-			this.center[i] = (p1.data[i] + p2.data[i]) / 2.0;
+		radius = Math.sqrt(Util.dist2(p1.data, p2.data)) / 2.0;
+		for (int i = 0; i < Util.d; i++) {
+			center[i] = (p1.data[i] + p2.data[i]) / 2.0;
 		}
-		this.core_points.add(p1);
-		this.core_points.add(p2);
-
-//		System.out.println(this.core_points.size() + "," + this.radius);
+		core_points.add(p1);
+		core_points.add(p2);
 
 		while (true) {
-			Point furthestPoint = findFarthestPoint(pointSet.points);
+			Point furthestPoint = findFarthestPoint(pointSet);
 			double max_dist = Math.sqrt(Util.dist2(center, furthestPoint.data));
 
-			if (max_dist <= this.radius * (1.0 + this.eps)) {
+			if (max_dist <= radius * (1.0 + eps)) {
 				break;
 			}
-
-			this.radius = (this.radius * this.radius / max_dist + max_dist) / 2.0;
-			for (int i = 0; i < this.dim; i++) {
-				this.center[i] = furthestPoint.data[i] + (this.radius / max_dist) * (this.center[i] - furthestPoint.data[i]);
+			radius = (radius * radius / max_dist + max_dist) / 2.0;
+			for (int i = 0; i < Util.d; i++) {
+				center[i] = furthestPoint.data[i] + (radius / max_dist) * (center[i] - furthestPoint.data[i]);
 			}
-			this.core_points.add(furthestPoint);
-
+			core_points.add(furthestPoint);
 			solveApxBall();
-
-//			System.out.println(this.core_points.size() + "," + this.radius);
 		}
 	}
 
 	private void solveApxBall() {
 		while (true) {
-			Point furthestPoint = findFarthestPoint(this.core_points);
+			Point furthestPoint = findFarthestPoint(core_points);
 			double max_dist = Math.sqrt(Util.dist2(center, furthestPoint.data));
 
-			if (max_dist <= this.radius * (1.0 + this.eps / 2.0)) {
+			if (max_dist <= radius * (1.0 + eps / 2.0)) {
 				break;
 			}
 
-			this.radius = (this.radius * this.radius / max_dist + max_dist) / 2.0;
-			for (int i = 0; i < this.dim; i++) {
-				this.center[i] = furthestPoint.data[i] + (this.radius / max_dist) * (this.center[i] - furthestPoint.data[i]);
+			radius = (radius * radius / max_dist + max_dist) / 2.0;
+			for (int i = 0; i < Util.d; i++) {
+				center[i] = furthestPoint.data[i] + (radius / max_dist) * (center[i] - furthestPoint.data[i]);
 			}
 		}
 	}
@@ -101,7 +91,7 @@ public class Coreset {
 		double max_sq_dist = 0.0;
 		Point farthestPoint = null;
 		for (Point point : points) {
-			double sq_dist = Util.dist2(this.center, point.data);
+			double sq_dist = Util.dist2(center, point.data);
 
 			if (sq_dist > max_sq_dist) {
 				max_sq_dist = sq_dist;
@@ -112,12 +102,12 @@ public class Coreset {
 		return farthestPoint;
 	}
 
-	public void validate(PointSet pointSet) {
+	public void validate(List<Point> pointSet) {
 		double max_sq_dist = 0.0;
-		double sq_radius = this.radius * this.radius;
+		double sq_radius = radius * radius;
 		int ext_count = 0;
-		for (Point point : pointSet.points) {
-			double sq_dist = Util.dist2(this.center, point.data);
+		for (Point point : pointSet) {
+			double sq_dist = Util.dist2(center, point.data);
 
 			if (sq_dist > sq_radius) {
 				ext_count += 1;
@@ -129,7 +119,7 @@ public class Coreset {
 		}
 
 		double exp_radius = Math.sqrt(max_sq_dist);
-		double approx_ratio = exp_radius / this.radius;
+		double approx_ratio = exp_radius / radius;
 
 		System.out.println("Actual Radius=" + exp_radius);
 		System.out.println("Approx Ratio=" + approx_ratio);
@@ -143,8 +133,8 @@ public class Coreset {
 //			builder.append(this.center[i]).append(", ");
 //		}
 //		builder.append(this.center[this.dim - 1]).append(")\n");
-		builder.append("radius=").append(this.radius).append("\n");
-		builder.append("squared radius=").append(this.radius * this.radius).append("\n");
+		builder.append("radius=").append(radius).append("\n");
+		builder.append("squared radius=").append(radius * radius).append("\n");
 
 		System.out.print(builder.toString());
 	}

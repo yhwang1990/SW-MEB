@@ -4,12 +4,11 @@ package test;
 //import java.io.FileReader;
 import java.io.IOException;
 //import java.util.ArrayList;
-//import java.util.List;
+import java.util.List;
 
 import ballcover.BlurredBallCover;
-
-//import model.Point;
-import model.PointSet;
+import model.Point;
+import model.Util;
 
 public class BlurredBallCoverMain {
 
@@ -22,9 +21,9 @@ public class BlurredBallCoverMain {
 		
 //		PointSet pts = PointSetUtils.pointsFromStream(data_file, n, d);
 		
-		PointSet pts = PointSet.pointsFromStream("../data/normal-100000-100.txt", 100000, 100);
+		List<Point> pts = Util.pointsFromStream("../data/normal-100000-100.txt", 100000, 100);
 		double eps = 1e-3;
-		System.out.println("dataset size: " + pts.num);
+		System.out.println("dataset size: " + pts.size());
 
 		BlurredBallCover coreset = new BlurredBallCover(pts, eps);
 

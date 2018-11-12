@@ -1,30 +1,27 @@
 package simplestream;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import coreset.Coreset;
 import model.Point;
-import model.PointSet;
 import model.Util;
 
 public class SimpleStream {
-	
-	public int dim;
 	public ArrayList<Point> core_points;
 	public double[] center;
 	public double radius;
 	
 	public double time_elapsed = 0.0;
 	
-	public SimpleStream(int dim, Point initPoint) {
+	public SimpleStream(Point initPoint) {
 		long t1 = System.nanoTime();
-		this.dim = dim;
 		
 		this.core_points = new ArrayList<>();
 		this.core_points.add(initPoint);
 		
-		this.center = new double[this.dim];
-		for (int i = 0; i < this.dim; i++) {
+		this.center = new double[Util.d];
+		for (int i = 0; i < Util.d; i++) {
 			this.center[i] = initPoint.data[i];
 		}
 		
@@ -33,15 +30,14 @@ public class SimpleStream {
 		this.time_elapsed += (t2 - t1) / 1e9;
 	}
 	
-	public SimpleStream(PointSet pointSet) {
+	public SimpleStream(List<Point> pointSet) {
 		long t1 = System.nanoTime();
-		this.dim = pointSet.dim;
 		
 		this.core_points = new ArrayList<>();
-		this.core_points.add(pointSet.points.get(0));
+		this.core_points.add(pointSet.get(0));
 		
-		this.center = new double[this.dim];
-		for (int i = 0; i < this.dim; i++) {
+		this.center = new double[Util.d];
+		for (int i = 0; i < Util.d; i++) {
 			this.center[i] = this.core_points.get(0).data[i];
 		}
 		
@@ -49,8 +45,8 @@ public class SimpleStream {
 		long t2 = System.nanoTime();
 		this.time_elapsed += (t2 - t1) / 1e9;
 		
-		for (int i = 1; i < pointSet.points.size(); i++) {
-			append(pointSet.points.get(i));
+		for (int i = 1; i < pointSet.size(); i++) {
+			append(pointSet.get(i));
 		}
 	}
 	
@@ -60,7 +56,7 @@ public class SimpleStream {
 		if (dist > this.radius) {
 			this.core_points.add(p);
 			
-			for (int i = 0; i < this.dim; i++) {
+			for (int i = 0; i < Util.d; i++) {
 				this.center[i] = this.center[i] + 0.5 * (1.0 - this.radius / dist) * (p.data[i] - this.center[i]);
 			}
 			
@@ -72,12 +68,12 @@ public class SimpleStream {
 		this.time_elapsed += (t2 - t1) / 1e9;
 	}
 	
-	public void validate(PointSet pointSet){
-		Coreset coreset = new Coreset(new PointSet(this.dim, this.core_points), 1e-9);
+	public void validate(List<Point> pointSet){
+		Coreset coreset = new Coreset(this.core_points, 1e-6);
 		System.out.println("Core Radius=" + coreset.radius);
 		
 		double max_sq_dist = 0.0;
-		for (Point point : pointSet.points) {
+		for (Point point : pointSet) {
 			double sq_dist = Util.dist2(this.center, point.data);
 
 			if (sq_dist > max_sq_dist) {

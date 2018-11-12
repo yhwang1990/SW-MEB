@@ -1,9 +1,11 @@
 package test;
 
 import java.io.IOException;
+import java.util.List;
 
 import dynamic.DynamicMEB;
-import model.PointSet;
+import model.Point;
+import model.Util;
 
 public class DynamicMEBMain {
 
@@ -15,17 +17,17 @@ public class DynamicMEBMain {
 		
 //		PointSet pts = PointSetUtils.pointsFromStream(data_file, n, d);
 		
-		PointSet pts = PointSet.pointsFromStream("../data/normal-100000-100.txt", 100000, 100);
+		List<Point> pts = Util.pointsFromStream("../data/normal-100000-100.txt", 100000, 100);
 		double eps = 1e-3;
-		System.out.println("dataset size: " + pts.num);
+		System.out.println("dataset size: " + pts.size());
 
-		DynamicMEB coreset = new DynamicMEB(new PointSet(100, pts.points.subList(0, 1000)), eps);
+		DynamicMEB coreset = new DynamicMEB(pts.subList(0, 1000), eps);
 		
 		for (int i = 1000; i < 100000; i++) {
-			coreset.insert(pts.points.get(i));
+			coreset.insert(pts.get(i));
 			
-			if (pts.points.get(i).idx % 1000 == 0) {
-				System.out.println(pts.points.get(i).idx);
+			if (pts.get(i).idx % 1000 == 0) {
+				System.out.println(pts.get(i).idx);
 				System.out.println("time elapsed: " + coreset.time_elapsed + "s");
 			}
 		}

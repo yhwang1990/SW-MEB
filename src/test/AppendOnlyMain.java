@@ -3,11 +3,10 @@ package test;
 //import java.io.BufferedReader;
 //import java.io.FileReader;
 import java.io.IOException;
-//import java.util.ArrayList;
-//import java.util.List;
+import java.util.List;
 
-//import model.Point;
-import model.PointSet;
+import model.Point;
+import model.Util;
 import slidingwindow.AppendOnlyMEB;
 
 public class AppendOnlyMain {
@@ -21,9 +20,9 @@ public class AppendOnlyMain {
 		
 //		PointSet pts = PointSetUtils.pointsFromStream(data_file, n, d);
 		
-		PointSet pts = PointSet.pointsFromStream("../data/normal-100000-100.txt", 100000, 100);
+		List<Point> pts = Util.pointsFromStream("../data/normal-100000-100.txt", 100000, 100);
 		double eps = 1e-3;
-		System.out.println("dataset size: " + pts.num);
+		System.out.println("dataset size: " + pts.size());
 
 		AppendOnlyMEB coreset = new AppendOnlyMEB(pts, eps);
 

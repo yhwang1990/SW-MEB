@@ -46,7 +46,7 @@ public class SimpleStreamMain {
 		for (int j = 0; j < d; ++j) {
 			data0[j] = Double.parseDouble(tokens[j]);
 		}
-		SimpleStream simpleStream = new SimpleStream(d, new Point(0, data0));
+		SimpleStream simpleStream = new SimpleStream(new Point(0, data0));
 		
 		for (int i = 1; i < n; ++i) {
 			line = br.readLine();

@@ -7,10 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Point;
-import model.PointSet;
 import model.Util;
-//import model.PointSet;
-//import model.PointSetUtils;
 import slidingwindow.SWMEBPlus;
 
 public class SWMEBPlusMain {
@@ -39,7 +36,7 @@ public class SWMEBPlusMain {
 		br.readLine();
 		String line = null;
 		
-		SWMEBPlus swmeb = new SWMEBPlus(d, 1e-3, 1e-3);
+		SWMEBPlus swmeb = new SWMEBPlus(1e-3, 1e-3);
 		
 		List<Point> buffer = new ArrayList<>();
 		for (int i = 0; i < n; ++i) {
@@ -52,7 +49,7 @@ public class SWMEBPlusMain {
 			buffer.add(new Point(i, data));
 			
 			if (buffer.size() >= Util.BATCH_SIZE) {
-				swmeb.append(new PointSet(d, buffer));
+				swmeb.append(buffer);
 				buffer.clear();
 			}
 		}
