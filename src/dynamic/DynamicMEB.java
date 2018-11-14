@@ -52,7 +52,7 @@ public class DynamicMEB {
 	}
 
 	public void approxMEB() {
-		Coreset core = new Coreset(new ArrayList<>(coreset), 1e-6);
+		Coreset core = new Coreset(new ArrayList<>(coreset), eps);
 		radius = core.radius;
 		center = core.center;
 	}

@@ -70,7 +70,7 @@ public class BlurredBallCover {
 		long t2 = System.nanoTime();
 		this.time_elapsed = (t2 - t1) / 1e9;
 		
-		Coreset coreset = new Coreset(new ArrayList<>(this.union_coreset), 1e-6);
+		Coreset coreset = new Coreset(new ArrayList<>(this.union_coreset), eps);
 		this.center = coreset.center;
 		this.radius = coreset.radius;
 	}
@@ -112,7 +112,7 @@ public class BlurredBallCover {
 	}
 	
 	public void approxMEB() {
-		Coreset coreset = new Coreset(new ArrayList<>(this.union_coreset), 1e-6);
+		Coreset coreset = new Coreset(new ArrayList<>(union_coreset), eps);
 		this.center = coreset.center;
 		this.radius = coreset.radius;
 	}

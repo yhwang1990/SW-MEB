@@ -66,7 +66,7 @@ public class AppendOnlyMEB {
 		long t2 = System.nanoTime();
 		this.time_elapsed = (t2 - t1) / 1e9;
 
-		Coreset coreset = new Coreset(this.core_points, 1e-6);
+		Coreset coreset = new Coreset(this.core_points, eps);
 		this.center = coreset.center;
 		this.radius = coreset.radius;
 	}
@@ -89,7 +89,7 @@ public class AppendOnlyMEB {
 	}
 
 	public void approxMEB() {
-		Coreset coreset = new Coreset(new ArrayList<>(this.core_points), 1e-6);
+		Coreset coreset = new Coreset(new ArrayList<>(core_points), eps);
 
 		this.center = coreset.center;
 		this.radius = coreset.radius;
