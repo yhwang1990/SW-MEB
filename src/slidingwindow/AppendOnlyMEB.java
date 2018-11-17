@@ -148,8 +148,7 @@ public class AppendOnlyMEB {
 
 			this.radius = (this.radius * this.radius / max_dist + max_dist) / 2.0;
 			for (int i = 0; i < Util.d; i++) {
-				this.center[i] = furthestPoint.data[i]
-						+ (this.radius / max_dist) * (this.center[i] - furthestPoint.data[i]);
+				this.center[i] = furthestPoint.data[i] + (this.radius / max_dist) * (this.center[i] - furthestPoint.data[i]);
 			}
 			this.core_points.add(furthestPoint);
 

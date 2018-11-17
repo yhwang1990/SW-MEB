@@ -23,7 +23,7 @@ public class SW_MEB {
 		Util.CHUNK_SIZE = Util.W /10;
 		
 		double eps1 = Double.parseDouble(args[5]);
-		Util.EPS_MIN = eps1 / 8.0;
+		Util.EPS_MIN = eps1 / 10.0;
 		Util.LAMBDA = Double.parseDouble(args[6]);
 		Util.EPS_MAX = Double.parseDouble(args[7]);
 
@@ -71,7 +71,7 @@ public class SW_MEB {
 				}
 				
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
-					System.out.println("SWMEB " + data_file + " " + Util.W + " " + Util.d + " " + eps1);
+					System.out.println("SWMEB " + data_file + " " + Util.W + " " + Util.d + " " + eps1 + " " + Util.LAMBDA + " " + Util.EPS_MAX);
 					System.out.println(i);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
@@ -115,7 +115,7 @@ public class SW_MEB {
 				}
 				
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
-					System.out.println("SWMEB+ " + data_file + " " + Util.W + " " + Util.d + " " + eps1);
+					System.out.println("SWMEB+ " + data_file + " " + Util.W + " " + Util.d + " " + eps1 + " " + Util.LAMBDA + " " + Util.EPS_MAX);
 					System.out.println(i);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
