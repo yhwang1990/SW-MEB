@@ -9,11 +9,15 @@ import java.util.List;
 public class Util {
 	public static final int BATCH_SIZE = 100;
 	
-	public static final double BETA_MAX = 0.1;
+	public static double EPS_MAX = 0.1;
+	public static double EPS_MIN = 1e-6;
+	public static double LAMBDA = 2.0;
 	
 	public static int W = 100000;
 	public static int d = 10;
+	
 	public static int CHUNK_SIZE = W / 10;
+	
 	public static double GAMMA = 0.1;
 	
 	//Parameters for dynamic MEB

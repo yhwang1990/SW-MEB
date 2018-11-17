@@ -36,7 +36,7 @@ public class SWMEBMain {
 		br.readLine();
 		String line = null;
 		
-		SWMEB swmeb = new SWMEB(1e-3, 1e-3);
+		SWMEB swmeb = new SWMEB(1e-3);
 		
 		List<Point> buffer = new ArrayList<>();
 		for (int i = 0; i < n; ++i) {

@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 import ballcover.BlurredBallCover;
 import coreset.Coreset;
@@ -14,8 +13,6 @@ import model.Point;
 import model.Util;
 import simplestream.SimpleStream;
 import slidingwindow.AppendOnlyMEB;
-import slidingwindow.SWMEB;
-import slidingwindow.SWMEBPlus;
 
 public class MEB {
 	public static void main(String[] args) {
@@ -45,14 +42,6 @@ public class MEB {
 			break;
 		case "SimpleStream":
 			run_simple_stream_meb(data_file, N);
-			break;
-		case "SWMEB":
-			eps = Double.parseDouble(args[5]);
-			run_sw_meb(data_file, N, eps);
-			break;
-		case "SWMEB+":
-			eps = Double.parseDouble(args[5]);
-			run_sw_meb_plus(data_file, N, eps);
 			break;
 		default:
 			System.err.println("Invalid Algorithm");
@@ -230,94 +219,6 @@ public class MEB {
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
 					SimpleStream inst = new SimpleStream(new ArrayList<>(buffer));
 					System.out.println("SimpleStream " + data_file + " " + Util.W + " " + Util.d);
-					System.out.println(i);
-					System.out.print(inst.toString());
-					inst.validate(buffer);
-					System.out.println();
-				}
-			}
-			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static void run_sw_meb(String data_file, int n, double eps1) {
-		LinkedList<Point> buffer = new LinkedList<>();
-		SWMEB inst = new SWMEB(eps1, eps1);
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(data_file));
-			String line;
-			int offset = Util.W / 10;
-			
-			List<Point> inst_buffer = new ArrayList<>();
-			for (int i = 0; i < n; i++) {
-				line = br.readLine();
-				String[] tokens = line.split(" ");
-				double[] data = new double[Util.d];
-				for (int j = 0; j < Util.d; ++j) {
-					data[j] = Double.parseDouble(tokens[j]);
-				}
-				Point new_point = new Point(i, data);
-				
-				buffer.addLast(new_point);
-				while (buffer.size() > Util.W) {
-					buffer.removeFirst();
-				}
-				
-				inst_buffer.add(new_point);
-				
-				if (inst_buffer.size() >= Util.BATCH_SIZE) {
-					inst.append(inst_buffer);
-					inst_buffer.clear();
-				}
-				
-				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
-					System.out.println("SWMEB " + data_file + " " + Util.W + " " + Util.d + " " + eps1);
-					System.out.println(i);
-					System.out.print(inst.toString());
-					inst.validate(buffer);
-					System.out.println();
-				}
-			}
-			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static void run_sw_meb_plus(String data_file, int n, double eps1) {
-		LinkedList<Point> buffer = new LinkedList<>();
-		SWMEBPlus inst = new SWMEBPlus(eps1, eps1);
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(data_file));
-			String line;
-			int offset = Util.W / 10;
-			
-			List<Point> inst_buffer = new ArrayList<>();
-			for (int i = 0; i < n; i++) {
-				line = br.readLine();
-				String[] tokens = line.split(" ");
-				double[] data = new double[Util.d];
-				for (int j = 0; j < Util.d; ++j) {
-					data[j] = Double.parseDouble(tokens[j]);
-				}
-				Point new_point = new Point(i, data);
-				
-				buffer.addLast(new_point);
-				while (buffer.size() > Util.W) {
-					buffer.removeFirst();
-				}
-				
-				inst_buffer.add(new_point);
-				
-				if (inst_buffer.size() >= Util.BATCH_SIZE) {
-					inst.append(inst_buffer);
-					inst_buffer.clear();
-				}
-				
-				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
-					System.out.println("SWMEB+ " + data_file + " " + Util.W + " " + Util.d + " " + eps1);
 					System.out.println(i);
 					System.out.print(inst.toString());
 					inst.validate(buffer);

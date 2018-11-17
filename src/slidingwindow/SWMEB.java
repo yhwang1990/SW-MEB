@@ -12,17 +12,16 @@ import model.Util;
 public class SWMEB {
 	
 	int cur_id;
-	double eps1, eps2;
+	double eps1;
 	
 	LinkedList<Integer> index;
 	HashMap<Integer, AppendOnlyMEB> instances;
 	
 	public double time_elapsed, deletion;
 
-	public SWMEB(double eps1, double eps2) {
+	public SWMEB(double eps1) {
 		this.cur_id = -1;
 		this.eps1 = eps1;
-		this.eps2 = eps2;
 		
 		this.index = new LinkedList<>();
 		this.instances = new HashMap<>();
@@ -48,7 +47,7 @@ public class SWMEB {
 
 		List<Integer> to_delete = new ArrayList<>();
 		int cur = 0, pre;
-		double beta = eps2;
+		double beta = Util.EPS_MIN;
 		while (cur < index.size() - 2) {
 			pre = cur;
 			cur = findNext(cur, beta);
@@ -57,8 +56,8 @@ public class SWMEB {
 					to_delete.add(index.get(i));
 				}
 			}
-			beta *= 3;
-			beta = Math.min(beta, Util.BETA_MAX);
+			beta *= Util.LAMBDA;
+			beta = Math.min(beta, Util.EPS_MAX);
 		}
 
 		if (to_delete.size() > 0) {
@@ -69,14 +68,7 @@ public class SWMEB {
 				instances.remove(del_id);
 			}
 		}
-		
-//		if (cur_id % 1000 == 999) {
-//			System.out.println(cur_id);
-//			for (int id : index) {
-//				System.out.print(instances.get(id).idx + ":" + instances.get(id).radius + " ");
-//			}
-//			System.out.println();
-//		}
+
 		long t2 = System.nanoTime();
 		time_elapsed += (t2 - t1) / 1e9;
 	}
@@ -99,7 +91,6 @@ public class SWMEB {
 			else
 				next = i - 1;
 		}
-//		System.out.println(cur + "," + next + "," + beta);
 		return next;
 	}
 	
@@ -135,11 +126,6 @@ public class SWMEB {
 			inst = instances.get(index.get(0));
 		}
 		StringBuilder builder = new StringBuilder();
-//		builder.append("center ");
-//		for (int i = 0; i < Util.d - 1; i++) {
-//			builder.append(inst.center[i]).append(" ");
-//		}
-//		builder.append(inst.center[Util.d - 1]).append("\n");
 		builder.append("radius ").append(inst.radius).append("\n");
 		builder.append("time ").append(time_elapsed).append("s\n");
 		return builder.toString();

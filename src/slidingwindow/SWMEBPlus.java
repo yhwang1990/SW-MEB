@@ -10,17 +10,16 @@ import model.Util;
 public class SWMEBPlus {
 	
 	int cur_id;
-	private double eps1, eps2;
+	private double eps1;
 	
 	LinkedList<AppendOnlyMEB> instances;
 	List<Point> buffer;
 	
 	public double time_elapsed;
 
-	public SWMEBPlus(double eps1, double eps2) {
+	public SWMEBPlus(double eps1) {
 		this.cur_id = -1;
 		this.eps1 = eps1;
-		this.eps2 = eps2;
 		
 		this.buffer = new ArrayList<>();
 		this.instances = new LinkedList<>();
@@ -63,7 +62,7 @@ public class SWMEBPlus {
 		AppendOnlyMEB baseInstance = new AppendOnlyMEB(buffer.subList(init_batch_id, init_batch_id + Util.BATCH_SIZE), eps1, true);
 //		System.out.println(baseInstance.idx);
 		
-		double beta = Util.BETA_MAX / 2;
+		double beta = Util.EPS_MAX;
 		double cur_radius = baseInstance.radius;
 		new_instances.addFirst(new AppendOnlyMEB(baseInstance.idx, baseInstance));
 		for (int batch_id = Util.CHUNK_SIZE / Util.BATCH_SIZE - 2; batch_id >= 0; batch_id--) {
@@ -73,8 +72,8 @@ public class SWMEBPlus {
 			if(baseInstance.radius / cur_radius >= 1.0 + beta) {
 				new_instances.addFirst(new AppendOnlyMEB(buffer.get(cur_batch_id).idx, baseInstance));
 				cur_radius = baseInstance.radius;
-				beta /= 2;
-				beta = Math.max(eps2, beta);
+				beta /= Util.LAMBDA;
+				beta = Math.max(Util.EPS_MIN, beta);
 			}
 		}
 		
@@ -99,11 +98,6 @@ public class SWMEBPlus {
 		AppendOnlyMEB inst = instances.getFirst();
 		
 		StringBuilder builder = new StringBuilder();
-//		builder.append("center ");
-//		for (int i = 0; i < Util.d - 1; i++) {
-//			builder.append(inst.center[i]).append(" ");
-//		}
-//		builder.append(inst.center[Util.d - 1]).append("\n");
 		builder.append("radius ").append(inst.radius).append("\n");
 		builder.append("time ").append(time_elapsed).append("s\n");
 		return builder.toString();
