@@ -33,8 +33,19 @@ public class Util {
 		return sum_sq;
 	}
 	
-	public static double rbf_eval(double[] d1, double[] d2) {
-		return Math.exp(-GAMMA * dist2(d1, d2));
+	public static double rbf_eval(Point p1, Point p2) {
+		if (p1.idx == p2.idx)
+			return 1.0;
+		return Math.exp(-GAMMA * dist2(p1.data, p2.data));
+	}
+	
+	public static double dist2wc(List<Point> pts, List<Double> coeff, Point p, double cNorm) {
+		double dist2 = 0.0;
+		for (int i = 0; i < pts.size(); i++) {
+			dist2 += (coeff.get(i) * rbf_eval(p, pts.get(i)));
+		}
+		dist2  = 1.0 + cNorm - 2.0 * dist2;
+		return dist2;
 	}
 	
 	public static final List<Point> pointsFromStream(String data_file, int n, int d) throws IOException {
