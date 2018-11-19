@@ -30,11 +30,8 @@ public class DynamicMEB {
 
 		this.eps = eps;
 
-		long t1 = System.nanoTime();
 		this.root_level = new LevelSet(0, new HashSet<>(pointSet));
 		this.root_level.preprocess();
-		long t2 = System.nanoTime();
-		this.time_elapsed += (t2 - t1) / 1e9;
 	}
 
 	public void delete(Point p) {
@@ -72,6 +69,11 @@ public class DynamicMEB {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius ").append(radius).append("\n");
+		return builder.toString();
+	}
+	
+	public String statTime() {
+		StringBuilder builder = new StringBuilder();
 		builder.append("time ").append(time_elapsed).append("s\n");
 		return builder.toString();
 	}
