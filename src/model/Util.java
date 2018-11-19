@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Util {
 	public static final int BATCH_SIZE = 100;
+	public static final double OPT_EPS = 1e-12;
 	
 	public static double EPS_MAX = 0.1;
 	public static double EPS_MIN = 1e-6;
@@ -37,6 +38,10 @@ public class Util {
 		if (p1.idx == p2.idx)
 			return 1.0;
 		return Math.exp(-GAMMA * dist2(p1.data, p2.data));
+	}
+	
+	public static double k_dist2(Point p1, Point p2) {
+		return (2.0 - 2.0 * rbf_eval(p1, p2));
 	}
 	
 	public static double dist2wc(List<Point> pts, List<Double> coeff, Point p, double cNorm) {

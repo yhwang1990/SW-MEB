@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import ballcover.BlurredBallCover;
-import coreset.Coreset;
+import coreset.KernelizedCoreset;
 import dynamic.DynamicMEB;
 import model.Point;
 import model.Util;
@@ -137,7 +137,7 @@ public class MEB {
 				}
 				
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
-					Coreset inst = new Coreset(new ArrayList<>(buffer), eps);
+					KernelizedCoreset inst = new KernelizedCoreset(new ArrayList<>(buffer), eps);
 					System.out.println("Coreset " + data_file + " " + Util.W + " " + Util.d + " " + eps);
 					System.out.println(i);
 					System.out.print(inst.toString());
