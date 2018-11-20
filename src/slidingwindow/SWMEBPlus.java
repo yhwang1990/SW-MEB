@@ -94,12 +94,21 @@ public class SWMEBPlus {
 		instances.getFirst().output();
 	}
 	
+	public int computeCoresetSize() {
+		int size = 0;
+		for (AppendOnlyMEB inst : instances) {
+			size += inst.computeCoresetSize();
+		}
+		return size;
+	}
+	
 	public String toString() {
 		AppendOnlyMEB inst = instances.getFirst();
 		
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius ").append(inst.radius).append("\n");
 		builder.append("time ").append(time_elapsed).append("s\n");
+		builder.append("coreset_size ").append(computeCoresetSize()).append("\n");
 		return builder.toString();
 	}
 

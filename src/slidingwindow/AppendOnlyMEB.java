@@ -114,6 +114,10 @@ public class AppendOnlyMEB {
 		System.out.print(builder.toString());
 	}
 	
+	public int computeCoresetSize() {
+		return core_points.size();
+	}
+	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 //		builder.append("center ");

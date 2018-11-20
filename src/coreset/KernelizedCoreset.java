@@ -9,7 +9,7 @@ import model.Util;
 public class KernelizedCoreset {
 	public ArrayList<Point> core_points;
 	public ArrayList<Double> coefficients;
-	public double radius;
+	public double radius2;
 	
 	private double cNorm;
 	private ArrayList<ArrayList<Double>> kernel_matrix;
@@ -21,7 +21,7 @@ public class KernelizedCoreset {
 	public KernelizedCoreset(List<Point> pointSet, double eps) {
 		this.core_points = new ArrayList<>();
 		this.coefficients = new ArrayList<>();
-		this.radius = 0.0;
+		this.radius2 = 0.0;
 		
 		this.cNorm = 0.0;
 		this.kernel_matrix = new ArrayList<>();
@@ -39,7 +39,6 @@ public class KernelizedCoreset {
 		Point p1 = findFarthestPoint(firstPoint, pointSet);
 		Point p2 = findFarthestPoint(p1, pointSet);
 
-		radius = Math.sqrt(Util.k_dist2(p1, p2)) / 2.0;
 		core_points.add(p1);
 		core_points.add(p2);
 		coefficients.add(0.5);
@@ -47,37 +46,25 @@ public class KernelizedCoreset {
 		
 		initKernelMatrix();
 		updateCNorm();
+		radius2 = 1.0 - cNorm;
 
 		while (true) {
 			Point furthestPoint = findFarthestPoint(pointSet);
-			double max_dist = Math.sqrt(Util.dist2wc(core_points, coefficients, furthestPoint, cNorm));
+			double max_dist2 = Util.dist2wc(core_points, coefficients, furthestPoint, cNorm);
 
-			if (max_dist <= radius * (1.0 + eps)) {
+			if (max_dist2 <= radius2 * (1.0 + eps) * (1.0 + eps)) {
 				break;
 			}
-			radius = (radius * radius / max_dist + max_dist) / 2.0;
-			for (int i = 0; i < Util.d; i++) {
-				center[i] = furthestPoint.data[i] + (radius / max_dist) * (center[i] - furthestPoint.data[i]);
-			}
 			core_points.add(furthestPoint);
-			solveApxBall();
+			updateKernelMatrix();
+			
+			reOptimize();
+			updateCNorm();
+			radius2 = 1.0 - cNorm;
 		}
 	}
 
-	private void solveApxBall() {
-		while (true) {
-			Point furthestPoint = findFarthestPoint(core_points);
-			double max_dist = Math.sqrt(Util.dist2(center, furthestPoint.data));
-
-			if (max_dist <= radius * (1.0 + eps / 2.0)) {
-				break;
-			}
-
-			radius = (radius * radius / max_dist + max_dist) / 2.0;
-			for (int i = 0; i < Util.d; i++) {
-				center[i] = furthestPoint.data[i] + (radius / max_dist) * (center[i] - furthestPoint.data[i]);
-			}
-		}
+	private void reOptimize() {
 	}
 
 	private Point findFarthestPoint(Point p, List<Point> points) {
@@ -146,7 +133,7 @@ public class KernelizedCoreset {
 	public void validate(List<Point> pointSet) {
 		double max_sq_dist = 0.0;
 		for (Point point : pointSet) {
-			double sq_dist = Util.dist2(center, point.data);
+			double sq_dist = Util.dist2wc(core_points, coefficients, point, cNorm);
 			if (sq_dist > max_sq_dist) {
 				max_sq_dist = sq_dist;
 			}
@@ -157,15 +144,15 @@ public class KernelizedCoreset {
 	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("radius ").append(radius).append("\n");
+		builder.append("radius ").append(Math.sqrt(radius2)).append("\n");
 		builder.append("time ").append(time_elapsed).append("s\n");
 		return builder.toString();
 	}
 
 	public void output() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("radius=").append(radius).append("\n");
-		builder.append("squared radius=").append(radius * radius).append("\n");
+		builder.append("radius=").append(Math.sqrt(radius2)).append("\n");
+		builder.append("squared radius=").append(radius2).append("\n");
 		System.out.print(builder.toString());
 	}
 }

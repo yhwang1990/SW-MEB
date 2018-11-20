@@ -118,6 +118,14 @@ public class SWMEB {
 		}
 	}
 	
+	public int computeCoresetSize() {
+		int size = 0;
+		for (AppendOnlyMEB inst : instances.values()) {
+			size += inst.computeCoresetSize();
+		}
+		return size;
+	}
+	
 	public String toString() {
 		AppendOnlyMEB inst = null;
 		if (index.get(0) >= cur_id - Util.W + 1) {
@@ -128,6 +136,7 @@ public class SWMEB {
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius ").append(inst.radius).append("\n");
 		builder.append("time ").append(time_elapsed).append("s\n");
+		builder.append("coreset_size ").append(computeCoresetSize()).append("\n");
 		return builder.toString();
 	}
 }

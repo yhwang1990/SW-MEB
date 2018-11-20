@@ -17,7 +17,7 @@ public class SWMEBMain {
 //		int n = Integer.parseInt(args[1]);
 //		int d = Integer.parseInt(args[2]);
 		
-		streamFromFile("../data/normal-100000-100.txt", 100000, 100);
+		streamFromFile("../data/normal/normal-2000000-100.txt", 100000, 100);
 		
 //		PointSet pts = PointSetUtils.pointsFromStream(data_file, n, d);
 		
@@ -36,6 +36,7 @@ public class SWMEBMain {
 		br.readLine();
 		String line = null;
 		
+		Util.d = d;
 		SWMEB swmeb = new SWMEB(1e-3);
 		
 		List<Point> buffer = new ArrayList<>();
@@ -55,8 +56,8 @@ public class SWMEBMain {
 		}
 		br.close();
 		
-		System.out.println("time elapsed: " + swmeb.time_elapsed + "s");
-		swmeb.output();
+		System.out.println(swmeb.toString());
+		
 	}
 
 }
