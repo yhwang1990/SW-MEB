@@ -13,11 +13,10 @@ public class KernelCoreset {
 	public double[] coefficients;
 	public double radius2;
 	
-	private double cNorm;
+	public double cNorm;
+	
 	private HashMap<Integer, double[]> kernel_cache;
-
 	public double time_elapsed = 0.0;
-
 	private double eps;
 	
 	private class IdDistPair {

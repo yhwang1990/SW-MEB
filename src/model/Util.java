@@ -18,7 +18,7 @@ public class Util {
 	
 	public static int CHUNK_SIZE = W / 10;
 	
-	public static double GAMMA = 0.1;
+	public static double GAMMA = 0;
 	
 	//Parameters for dynamic MEB
 	public static int C = (int) (10 * Math.log(W));
