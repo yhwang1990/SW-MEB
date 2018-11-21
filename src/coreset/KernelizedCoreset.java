@@ -150,7 +150,6 @@ public class KernelizedCoreset {
 		}
 
 		Point p = core_points.get(core_points.size() - 1);
-//		System.out.println(p.idx + ":" + p.data[0] + "," + p.data[1]);
 		for (int i = 0; i < core_points.size() - 1; i++) {
 			double value = Util.rbf_eval(p, core_points.get(i));
 			kernel_matrix[i][core_points.size() - 1] = value;
