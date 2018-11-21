@@ -6,7 +6,7 @@ import java.util.List;
 import model.Point;
 import model.Util;
 
-public class KernelizedSimpleStream {
+public class KernelSimpleStream {
 	public ArrayList<Point> core_points;
 	public ArrayList<Double> coefficients;
 	public double radius;
@@ -16,7 +16,7 @@ public class KernelizedSimpleStream {
 	
 	public double time_elapsed = 0.0;
 	
-	public KernelizedSimpleStream(Point initPoint) {
+	public KernelSimpleStream(Point initPoint) {
 		long t1 = System.nanoTime();
 		
 		this.core_points = new ArrayList<>();
@@ -38,7 +38,7 @@ public class KernelizedSimpleStream {
 		this.time_elapsed += (t2 - t1) / 1e9;
 	}
 	
-	public KernelizedSimpleStream(List<Point> pointSet) {
+	public KernelSimpleStream(List<Point> pointSet) {
 		long t1 = System.nanoTime();
 		
 		this.core_points = new ArrayList<>();

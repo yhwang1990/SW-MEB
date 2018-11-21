@@ -5,7 +5,7 @@ import java.util.List;
 
 import model.Point;
 import model.Util;
-import simplestream.KernelizedSimpleStream;
+import simplestream.KernelSimpleStream;
 
 public class KernelSimpleStreamMain {
 
@@ -20,7 +20,7 @@ public class KernelSimpleStreamMain {
 //		PointSet pts = PointSetUtils.pointsFromStream(data_file, n, d);
 		
 		List<Point> pts = Util.pointsFromStream("../data/normal/normal-2000000-100.txt", 100000, 100);
-		KernelizedSimpleStream simpleStream = new KernelizedSimpleStream(pts);
+		KernelSimpleStream simpleStream = new KernelSimpleStream(pts);
 		System.out.println("time elapsed: " + simpleStream.time_elapsed + "s");
 		simpleStream.output();
 		simpleStream.validate(pts);
