@@ -8,10 +8,6 @@ import java.util.List;
 
 public class Util {
 	public static final int BATCH_SIZE = 100;
-	public static final double TAU = 1e-12;
-	public final static double SMO_EPS = 1e-3;
-	public final static double EPS_SCALING = 0.5d;
-	public final static double OPT_EPS = 1e-6;
 	
 	public static double EPS_MAX = 0.1;
 	public static double EPS_MIN = 1e-6;
@@ -40,7 +36,7 @@ public class Util {
 	public static double rbf_eval(Point p1, Point p2) {
 		if (p1.idx == p2.idx)
 			return 1.0;
-		return Math.exp(-GAMMA * dist2(p1.data, p2.data));
+		return Math.exp(- dist2(p1.data, p2.data) / GAMMA);
 	}
 	
 	public static double k_dist2(Point p1, Point p2) {
@@ -81,5 +77,16 @@ public class Util {
 		}
 		br.close();
 		return points;
+	}
+	
+	public static double kernel_width_estimator(List<Point> points) {
+		double size = points.size() * points.size();
+		double sum_dist2  = 0.0;
+		for (int i = 0; i < points.size(); i++) {
+			for (int j = 0; j < points.size(); j++) {
+				sum_dist2 += dist2(points.get(i).data, points.get(j).data);
+			}
+		}
+		return sum_dist2 / size;
 	}
 }

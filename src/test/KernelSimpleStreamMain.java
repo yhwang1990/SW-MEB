@@ -1,7 +1,5 @@
 package test;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
@@ -28,37 +26,37 @@ public class KernelSimpleStreamMain {
 		simpleStream.validate(pts);
 	}
 	
-	private static void streamFromFile(String filename, int n, int d, int start_id) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(filename));
-		br.readLine();
-		String line = null;
-		
-		for (int i = 0; i < start_id; ++i) {
-			line = br.readLine();
-		}
-		System.out.println(start_id);
-		
-		line = br.readLine();
-		String[] tokens = line.split(" ");
-		double[] data0 = new double[d];
-		for (int j = 0; j < d; ++j) {
-			data0[j] = Double.parseDouble(tokens[j]);
-		}
-		KernelizedSimpleStream simpleStream = new KernelizedSimpleStream(new Point(0, data0));
-		
-		for (int i = 1; i < n; ++i) {
-			line = br.readLine();
-			tokens = line.split(" ");
-			double[] data = new double[d];
-			for (int j = 0; j < d; ++j) {
-				data[j] = Double.parseDouble(tokens[j]);
-			}
-			simpleStream.append(new Point(i, data));
-		}
-		br.close();
-		
-		System.out.println("time elapsed: " + simpleStream.time_elapsed + "s");
-		simpleStream.output();
-	}
+//	private static void streamFromFile(String filename, int n, int d, int start_id) throws IOException {
+//		BufferedReader br = new BufferedReader(new FileReader(filename));
+//		br.readLine();
+//		String line = null;
+//		
+//		for (int i = 0; i < start_id; ++i) {
+//			line = br.readLine();
+//		}
+//		System.out.println(start_id);
+//		
+//		line = br.readLine();
+//		String[] tokens = line.split(" ");
+//		double[] data0 = new double[d];
+//		for (int j = 0; j < d; ++j) {
+//			data0[j] = Double.parseDouble(tokens[j]);
+//		}
+//		KernelizedSimpleStream simpleStream = new KernelizedSimpleStream(new Point(0, data0));
+//		
+//		for (int i = 1; i < n; ++i) {
+//			line = br.readLine();
+//			tokens = line.split(" ");
+//			double[] data = new double[d];
+//			for (int j = 0; j < d; ++j) {
+//				data[j] = Double.parseDouble(tokens[j]);
+//			}
+//			simpleStream.append(new Point(i, data));
+//		}
+//		br.close();
+//		
+//		System.out.println("time elapsed: " + simpleStream.time_elapsed + "s");
+//		simpleStream.output();
+//	}
 
 }
