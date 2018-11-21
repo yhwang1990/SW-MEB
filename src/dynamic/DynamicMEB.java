@@ -167,7 +167,7 @@ public class DynamicMEB {
 			R.addAll(P);
 			R.removeAll(Q);
 			R.addAll(union_coreset);
-			if (P.size() > R.size()) {
+			if (P.size() > R.size() && level_id < 100) {
 				LevelSet next = new LevelSet(level_id + 1, R);
 				next_level = next;
 				next_level.prev_level = this;

@@ -64,11 +64,12 @@ public class DynMEB {
 					inst.insert(new_point);
 					inst.delete(expired_point);
 					
-					if ((i - Util.W + 1) % offset == 200) {
+					if ((i - Util.W + 1) % offset == 100) {
 						System.out.println(inst.statTime());
 					}
 				}
 			}
+			System.out.println();
 			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
