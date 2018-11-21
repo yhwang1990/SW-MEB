@@ -8,7 +8,10 @@ import java.util.List;
 
 public class Util {
 	public static final int BATCH_SIZE = 100;
-	public static final double OPT_EPS = 1e-12;
+	public static final double TAU = 1e-12;
+	public final static double SMO_EPS = 1e-3;
+	public final static double EPS_SCALING = 0.5d;
+	public final static double OPT_EPS = 1e-6;
 	
 	public static double EPS_MAX = 0.1;
 	public static double EPS_MIN = 1e-6;
@@ -48,6 +51,15 @@ public class Util {
 		double dist2 = 0.0;
 		for (int i = 0; i < pts.size(); i++) {
 			dist2 += (coeff.get(i) * rbf_eval(p, pts.get(i)));
+		}
+		dist2  = 1.0 + cNorm - 2.0 * dist2;
+		return dist2;
+	}
+	
+	public static double dist2wc(List<Point> pts, double[] coeff, Point p, double cNorm) {
+		double dist2 = 0.0;
+		for (int i = 0; i < pts.size(); i++) {
+			dist2 += (coeff[i] * rbf_eval(p, pts.get(i)));
 		}
 		dist2  = 1.0 + cNorm - 2.0 * dist2;
 		return dist2;

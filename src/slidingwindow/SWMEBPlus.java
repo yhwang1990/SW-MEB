@@ -1,6 +1,7 @@
 package slidingwindow;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -95,11 +96,13 @@ public class SWMEBPlus {
 	}
 	
 	public int computeCoresetSize() {
-		int size = 0;
+		HashSet<Integer> core_idx = new HashSet<>();
 		for (AppendOnlyMEB inst : instances) {
-			size += inst.computeCoresetSize();
+			for (Point p : inst.core_points) {
+				core_idx.add(p.idx);
+			}
 		}
-		return size;
+		return core_idx.size();
 	}
 	
 	public String toString() {

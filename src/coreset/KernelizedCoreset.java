@@ -7,12 +7,14 @@ import model.Point;
 import model.Util;
 
 public class KernelizedCoreset {
+	private static int K_SIZE = 1000;
+	
 	public ArrayList<Point> core_points;
-	public ArrayList<Double> coefficients;
+	public double[] coefficients = new double[K_SIZE];
 	public double radius2;
 	
 	private double cNorm;
-	private ArrayList<ArrayList<Double>> kernel_matrix;
+	private double[][] kernel_matrix = new double[K_SIZE][K_SIZE];
 
 	public double time_elapsed = 0.0;
 
@@ -20,11 +22,9 @@ public class KernelizedCoreset {
 
 	public KernelizedCoreset(List<Point> pointSet, double eps) {
 		this.core_points = new ArrayList<>();
-		this.coefficients = new ArrayList<>();
 		this.radius2 = 0.0;
 		
 		this.cNorm = 0.0;
-		this.kernel_matrix = new ArrayList<>();
 		
 		this.eps = eps;
 
@@ -41,30 +41,57 @@ public class KernelizedCoreset {
 
 		core_points.add(p1);
 		core_points.add(p2);
-		coefficients.add(0.5);
-		coefficients.add(0.5);
+		coefficients[0] = coefficients[1] = 0.5;
 		
 		initKernelMatrix();
 		updateCNorm();
 		radius2 = 1.0 - cNorm;
-
-		while (true) {
-			Point furthestPoint = findFarthestPoint(pointSet);
-			double max_dist2 = Util.dist2wc(core_points, coefficients, furthestPoint, cNorm);
-
-			if (max_dist2 <= radius2 * (1.0 + eps) * (1.0 + eps)) {
-				break;
-			}
+		System.out.println(core_points.size() + "," + radius2);
+		
+		Point furthestPoint = findFarthestPoint(pointSet);
+		double max_dist2 = Util.dist2wc(core_points, coefficients, furthestPoint, cNorm);
+		double delta = max_dist2 / radius2 - 1.0;
+		while (delta > (1.0 + eps) * (1.0 + eps) - 1.0) {
 			core_points.add(furthestPoint);
 			updateKernelMatrix();
 			
-			reOptimize();
+			double lambda = delta / (2.0 * (1.0 + delta));
+			
+			for (int i = 0; i < core_points.size() - 1; i++) {
+				coefficients[i] = (1.0 - lambda) * coefficients[i];
+			}
+			coefficients[core_points.size() - 1] = lambda;
 			updateCNorm();
 			radius2 = 1.0 - cNorm;
+			System.out.println(core_points.size() + "," + radius2);
+			
+			furthestPoint = findFarthestPoint(pointSet);
+			max_dist2 = Util.dist2wc(core_points, coefficients, furthestPoint, cNorm);
+			delta = max_dist2 / radius2 - 1.0;
 		}
 	}
 
-	private void reOptimize() {
+	private int findFarthestIndex() {
+		double max_sq_dist = 0.0;
+		int idx = -1;
+		for (int i = 0; i < core_points.size(); i++) {
+			double sq_dist = k_dist2(i);
+
+			if (sq_dist > max_sq_dist) {
+				max_sq_dist = sq_dist;
+				idx = i;
+			}
+		}
+		return idx;
+	}
+	
+	private double k_dist2(int idx) {
+		double dist2 = 0.0;
+		for (int i = 0; i < core_points.size(); i++) {
+			dist2 += (coefficients[i] * kernel_matrix[idx][i]);
+		}
+		dist2  = 1.0 + cNorm - 2.0 * dist2;
+		return dist2;
 	}
 
 	private Point findFarthestPoint(Point p, List<Point> points) {
@@ -99,33 +126,43 @@ public class KernelizedCoreset {
 	
 	private void initKernelMatrix() {
 		for (int i = 0; i < core_points.size(); i++) {
-			ArrayList<Double> kernel_vector = new ArrayList<>();
 			Point p = core_points.get(i);
-			for (int j = 0; j < core_points.size(); j++) {
-				double value = Util.rbf_eval(core_points.get(j), p);
-				kernel_vector.add(value);
+			for (int j = i; j < core_points.size(); j++) {
+				double value = Util.rbf_eval(p, core_points.get(j));
+				kernel_matrix[i][j] = kernel_matrix[j][i] = value;
 			}
-			kernel_matrix.add(kernel_vector);
 		}
 	}
 	
 	private void updateKernelMatrix() {
-		Point p = core_points.get(core_points.size() - 1);
-		ArrayList<Double> kernel_vector = new ArrayList<>();
-		for (int i = 0; i < core_points.size() - 1; i++) {
-			double value = Util.rbf_eval(core_points.get(i), p);
-			kernel_matrix.get(i).add(value);
-			kernel_vector.add(value);
+		if (core_points.size() > K_SIZE) {
+			K_SIZE *= 2;
+			double[][] expanded_kernel_matrix = new double[K_SIZE][K_SIZE];
+			double[] expanded_coefficients = new double[K_SIZE];
+			
+			System.arraycopy(coefficients, 0, expanded_coefficients, 0, core_points.size() - 1);
+			for (int i = 0; i < core_points.size() - 1; i++) {
+				System.arraycopy(kernel_matrix[i], 0, expanded_kernel_matrix[i], 0, core_points.size() - 1);
+			}
+			
+			coefficients = expanded_coefficients;
+			kernel_matrix = expanded_kernel_matrix;
 		}
-		kernel_vector.add(Util.rbf_eval(p, p));
-		kernel_matrix.add(kernel_vector);
+
+		Point p = core_points.get(core_points.size() - 1);
+//		System.out.println(p.idx + ":" + p.data[0] + "," + p.data[1]);
+		for (int i = 0; i < core_points.size() - 1; i++) {
+			double value = Util.rbf_eval(p, core_points.get(i));
+			kernel_matrix[i][core_points.size() - 1] = value;
+			kernel_matrix[core_points.size() - 1][i] = value;
+		}
 	}
 
 	private void updateCNorm() {
 		cNorm = 0.0;
 		for (int i = 0; i < core_points.size(); i++) {
 			for (int j = 0; j < core_points.size(); j++) {
-				cNorm += (coefficients.get(i) * coefficients.get(j) * kernel_matrix.get(i).get(j));
+				cNorm += (coefficients[i] * coefficients[j] * kernel_matrix[i][j]);
 			}
 		}
 	}
