@@ -71,28 +71,28 @@ public class KernelizedCoreset {
 		}
 	}
 
-	private int findFarthestIndex() {
-		double max_sq_dist = 0.0;
-		int idx = -1;
-		for (int i = 0; i < core_points.size(); i++) {
-			double sq_dist = k_dist2(i);
-
-			if (sq_dist > max_sq_dist) {
-				max_sq_dist = sq_dist;
-				idx = i;
-			}
-		}
-		return idx;
-	}
+//	private int findFarthestIndex() {
+//		double max_sq_dist = 0.0;
+//		int idx = -1;
+//		for (int i = 0; i < core_points.size(); i++) {
+//			double sq_dist = k_dist2(i);
+//
+//			if (sq_dist > max_sq_dist) {
+//				max_sq_dist = sq_dist;
+//				idx = i;
+//			}
+//		}
+//		return idx;
+//	}
 	
-	private double k_dist2(int idx) {
-		double dist2 = 0.0;
-		for (int i = 0; i < core_points.size(); i++) {
-			dist2 += (coefficients[i] * kernel_matrix[idx][i]);
-		}
-		dist2  = 1.0 + cNorm - 2.0 * dist2;
-		return dist2;
-	}
+//	private double k_dist2(int idx) {
+//		double dist2 = 0.0;
+//		for (int i = 0; i < core_points.size(); i++) {
+//			dist2 += (coefficients[i] * kernel_matrix[idx][i]);
+//		}
+//		dist2  = 1.0 + cNorm - 2.0 * dist2;
+//		return dist2;
+//	}
 
 	private Point findFarthestPoint(Point p, List<Point> points) {
 		double max_sq_dist = 0.0;
