@@ -121,6 +121,7 @@ public class KernelSimpleStream {
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius ").append(radius).append("\n");
 		builder.append("time ").append(time_elapsed).append("s\n");
+		builder.append("support_size ").append(core_points.size()).append("\n");
 		return builder.toString();
 	}
 	

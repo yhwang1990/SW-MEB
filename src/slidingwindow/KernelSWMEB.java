@@ -139,6 +139,7 @@ public class KernelSWMEB {
 		builder.append("radius ").append(Math.sqrt(inst.radius2)).append("\n");
 		builder.append("time ").append(time_elapsed).append("s\n");
 		builder.append("coreset_size ").append(computeCoresetSize()).append("\n");
+		builder.append("support_size ").append(inst.computeSupportSize()).append("\n");
 		return builder.toString();
 	}
 }

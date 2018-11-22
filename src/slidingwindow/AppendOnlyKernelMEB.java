@@ -150,14 +150,21 @@ public class AppendOnlyKernelMEB {
 		System.out.print(builder.toString());
 	}
 	
-	public int computeCoresetSize() {
-		return core_points.size();
+	public int computeSupportSize() {
+		int count = 0;
+		for (int i = 0; i < coefficients.size(); i++) {
+			if (coefficients.get(i) > 1e-12) {
+				count++;
+			}
+		}
+		return count;
 	}
 	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius ").append(Math.sqrt(radius2)).append("\n");
 		builder.append("time ").append(time_elapsed).append("s\n");
+		builder.append("support_size ").append(computeSupportSize()).append("\n");
 		return builder.toString();
 	}
 

@@ -60,7 +60,6 @@ public class KernelSWMEBPlus {
 		LinkedList<AppendOnlyKernelMEB> new_instances = new LinkedList<>();
 		int init_batch_id = buffer.size() - Util.BATCH_SIZE;
 		AppendOnlyKernelMEB baseInstance = new AppendOnlyKernelMEB(buffer.subList(init_batch_id, init_batch_id + Util.BATCH_SIZE), eps1, true);
-//		System.out.println(baseInstance.idx);
 		
 		double beta = Util.EPS_MAX;
 		double cur_radius2 = baseInstance.radius2;
@@ -111,6 +110,7 @@ public class KernelSWMEBPlus {
 		builder.append("radius ").append(Math.sqrt(inst.radius2)).append("\n");
 		builder.append("time ").append(time_elapsed).append("s\n");
 		builder.append("coreset_size ").append(computeCoresetSize()).append("\n");
+		builder.append("support_size ").append(inst.computeSupportSize()).append("\n");
 		return builder.toString();
 	}
 }

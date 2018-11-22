@@ -77,6 +77,7 @@ public class DynamicKernelMEB {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius ").append(Math.sqrt(radius2)).append("\n");
+		builder.append("support_size ").append(coreset.size()).append("\n");
 		return builder.toString();
 	}
 	

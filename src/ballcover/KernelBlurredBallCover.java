@@ -144,6 +144,7 @@ public class KernelBlurredBallCover {
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius ").append(Math.sqrt(radius2)).append("\n");
 		builder.append("time ").append(time_elapsed).append("s\n");
+		builder.append("support_size ").append(result_coreset.size()).append("\n");
 		return builder.toString();
 	}
 
