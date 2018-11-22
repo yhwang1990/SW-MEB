@@ -11,7 +11,7 @@ import java.util.List;
 public class Util {
 	public static final int BATCH_SIZE = 100;
 	
-	public static double EPS_MAX = 0.1;
+	public static double EPS_MAX = 0.05;
 	public static double EPS_MIN = 1e-6;
 	public static double LAMBDA = 2.0;
 	
