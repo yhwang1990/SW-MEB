@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class Util {
@@ -47,6 +49,15 @@ public class Util {
 		double dist2 = 0.0;
 		for (int i = 0; i < pts.size(); i++) {
 			dist2 += (coeff.get(i) * rbf_eval(p, pts.get(i)));
+		}
+		dist2  = 1.0 + cNorm - 2.0 * dist2;
+		return dist2;
+	}
+	
+	public static double dist2wc(HashSet<Point> pts, HashMap<Integer, Double> coeff, Point p1, double cNorm) {
+		double dist2 = 0.0;
+		for (Point p2 : pts) {
+			dist2 += (coeff.get(p2.idx) * rbf_eval(p1, p2));
 		}
 		dist2  = 1.0 + cNorm - 2.0 * dist2;
 		return dist2;
