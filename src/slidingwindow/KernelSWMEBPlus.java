@@ -45,13 +45,13 @@ public class KernelSWMEBPlus {
 			buffer.clear();
 		}
 		
-		if (cur_id % 10000 == 9999) {
-			System.out.println(cur_id);
-			for (AppendOnlyKernelMEB inst : instances) {
-				System.out.print(inst.idx + ":" + inst.radius2 + " ");
-			}
-			System.out.println();
-		}
+//		if (cur_id % 10000 == 9999) {
+//			System.out.println(cur_id);
+//			for (AppendOnlyKernelMEB inst : instances) {
+//				System.out.print(inst.idx + ":" + inst.radius2 + " ");
+//			}
+//			System.out.println();
+//		}
 		long t2 = System.nanoTime();
 		time_elapsed += (t2 - t1) / 1e9;
 	}
