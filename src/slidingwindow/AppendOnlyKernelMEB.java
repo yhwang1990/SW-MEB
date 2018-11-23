@@ -75,10 +75,12 @@ public class AppendOnlyKernelMEB {
 
 		long t1 = System.nanoTime();
 		coresetInitial(pointSet.subList(0, Util.BATCH_SIZE));
+//		System.out.println(Util.BATCH_SIZE + "," + Math.sqrt(radius2));
 		int batch_id = 1;
 		for (batch_id = 1; batch_id < pointSet.size() / Util.BATCH_SIZE; batch_id++) {
 			List<Point> next_batch = pointSet.subList(batch_id * Util.BATCH_SIZE, (batch_id + 1) * Util.BATCH_SIZE);
 			append(next_batch);
+//			System.out.println((batch_id + 1) * Util.BATCH_SIZE + "," + Math.sqrt(radius2));
 		}
 
 		if (batch_id * Util.BATCH_SIZE < pointSet.size()) {

@@ -52,14 +52,14 @@ public class KernelBlurredBallCover {
 		int batch_id = 0;
 		for (batch_id = 0; batch_id < pointSet.size() / Util.BATCH_SIZE; batch_id++) {
 			List<Point> next_batch = pointSet.subList(batch_id * Util.BATCH_SIZE, (batch_id + 1) * Util.BATCH_SIZE);
-			System.out.println(next_batch.get(0).idx);
+//			System.out.println(next_batch.get(0).idx);
 			
 			if (this.blurred_cover.isEmpty()) {
 				KernelBlurredBall initBall = new KernelBlurredBall(0, next_batch);
 				this.union_coreset.addAll(initBall.ball_coreset);
 				this.blurred_cover.addFirst(initBall);
 				
-				System.out.println(this.blurred_cover.getFirst().ball_radius2 + "," + this.union_coreset.size());
+//				System.out.println(this.blurred_cover.getFirst().ball_radius2 + "," + this.union_coreset.size());
 			} else {
 				append(next_batch);
 			}
@@ -67,7 +67,7 @@ public class KernelBlurredBallCover {
 		
 		if (batch_id * Util.BATCH_SIZE < pointSet.size()) {
 			List<Point> next_batch = pointSet.subList(batch_id * Util.BATCH_SIZE, pointSet.size());
-			System.out.println(next_batch.get(0).idx);
+//			System.out.println(next_batch.get(0).idx);
 			append(next_batch);
 		}
 		long t2 = System.nanoTime();
@@ -112,7 +112,7 @@ public class KernelBlurredBallCover {
 			union_coreset.addAll(nextBall.ball_coreset);
 			blurred_cover.addFirst(nextBall);
 			
-			System.out.println(this.blurred_cover.getFirst().ball_radius2 + "," + this.union_coreset.size());
+//			System.out.println(this.blurred_cover.getFirst().ball_radius2 + "," + this.union_coreset.size());
 		}
 		long t2 = System.nanoTime();
 		time_elapsed += (t2 - t1) / 1e9;
