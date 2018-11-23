@@ -14,7 +14,7 @@ import slidingwindow.KernelSWMEBPlus;
 
 public class SW_MEB_Kernel {
 	
-	public static final String GAMMA_FILE = "";
+	public static final String GAMMA_FILE = "data/gamma.txt";
 	
 	public static void main(String[] args) {
 		String algorithm = args[0];

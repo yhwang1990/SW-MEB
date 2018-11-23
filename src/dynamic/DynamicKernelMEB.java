@@ -207,7 +207,7 @@ public class DynamicKernelMEB {
 
 			counter = Math.max(1, (int) (Util.DELTA * P.size()));
 			
-			System.out.println(level_id + ":" + l_radius2 + "," + l_coreset.size() + "," + u_coreset.size());
+//			System.out.println(level_id + ":" + l_radius2 + "," + l_coreset.size() + "," + u_coreset.size());
 		}
 
 		void delete(Point p) {

@@ -12,7 +12,7 @@ import model.Util;
 
 public class DynMEB_Kernel {
 	
-	public static final String GAMMA_FILE = "";
+	public static final String GAMMA_FILE = "data/gamma.txt";
 	
 	public static void main(String[] args) {
 		String algorithm = args[0];
@@ -74,7 +74,6 @@ public class DynMEB_Kernel {
 				if (buffer.size() > Util.W) {
 					expired_point = buffer.removeFirst();
 				}
-				
 				if (i + 1 > Util.W && (i - Util.W + 1) % offset == 0) {
 					inst = new DynamicKernelMEB(new ArrayList<>(buffer), eps);
 					inst.approxMEB();
@@ -82,12 +81,14 @@ public class DynMEB_Kernel {
 					System.out.println(i);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
-				} else if (inst != null && i + 1 > Util.W && (i - Util.W + 1) % offset > 0 && (i - Util.W + 1) % offset <= 100) {
+					System.out.println();
+				} else if (inst != null && (i - Util.W + 1) / offset == 1 && i + 1 > Util.W && (i - Util.W + 1) % offset > 0 && (i - Util.W + 1) % offset <= 10) {
 					inst.insert(new_point);
 					inst.delete(expired_point);
 					
-					if ((i - Util.W + 1) % offset == 100) {
-						System.out.println(inst.statTime());
+					if ((i - Util.W + 1) % offset == 10) {
+						System.out.print(inst.statTime());
+						System.out.println();
 					}
 				}
 			}
