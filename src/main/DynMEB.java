@@ -60,11 +60,11 @@ public class DynMEB {
 					System.out.println(i);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
-				} else if (inst != null && i + 1 > Util.W && (i - Util.W + 1) % offset > 0 && (i - Util.W + 1) % offset <= 100) {
+				} else if (inst != null && i + 1 > Util.W && (i - Util.W + 1) % offset > 0 && (i - Util.W + 1) % offset <= 10) {
 					inst.insert(new_point);
 					inst.delete(expired_point);
 					
-					if ((i - Util.W + 1) % offset == 100) {
+					if ((i - Util.W + 1) % offset == 10) {
 						System.out.println(inst.statTime());
 					}
 				}
