@@ -58,27 +58,30 @@ public class SWMEBPlus {
 	}
 	
 	private void addInstances(List<Point> buffer) {
-		LinkedList<AppendOnlyMEB> new_instances = new LinkedList<>();
+		LinkedList<AppendOnlyMEB> new_inst = new LinkedList<>();
 		int init_batch_id = buffer.size() - Util.BATCH_SIZE;
+		int last_inst_idx = init_batch_id;
 		AppendOnlyMEB baseInstance = new AppendOnlyMEB(buffer.subList(init_batch_id, init_batch_id + Util.BATCH_SIZE), eps1, true);
 //		System.out.println(baseInstance.idx);
 		
 		double beta = Util.EPS_MAX;
 		double cur_radius = baseInstance.radius;
-		new_instances.addFirst(new AppendOnlyMEB(baseInstance.idx, baseInstance));
+		new_inst.addFirst(new AppendOnlyMEB(baseInstance.idx, baseInstance));
 		for (int batch_id = Util.CHUNK_SIZE / Util.BATCH_SIZE - 2; batch_id >= 0; batch_id--) {
 			int cur_batch_id = batch_id * Util.BATCH_SIZE;
 			baseInstance.append(buffer.subList(cur_batch_id, cur_batch_id + Util.BATCH_SIZE));
 			
 			if(baseInstance.radius / cur_radius >= 1.0 + beta) {
-				new_instances.addFirst(new AppendOnlyMEB(buffer.get(cur_batch_id).idx, baseInstance));
+				new_inst.addFirst(new AppendOnlyMEB(buffer.get(cur_batch_id).idx, baseInstance));
 				cur_radius = baseInstance.radius;
-				beta /= Util.LAMBDA;
-				beta = Math.max(Util.EPS_MIN, beta);
+				last_inst_idx = cur_batch_id;
+			} else if ((last_inst_idx - cur_batch_id) >= (buffer.size() / Util.MIN_INST)) {
+				new_inst.addFirst(new AppendOnlyMEB(buffer.get(cur_batch_id).idx, baseInstance));
+				last_inst_idx = cur_batch_id;
 			}
 		}
 		
-		for (AppendOnlyMEB inst : new_instances) {
+		for (AppendOnlyMEB inst : new_inst) {
 			instances.addLast(inst);
 		}
 	}

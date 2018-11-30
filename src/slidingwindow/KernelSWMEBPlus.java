@@ -59,6 +59,7 @@ public class KernelSWMEBPlus {
 	private void addInstances(List<Point> buffer) {
 		LinkedList<AppendOnlyKernelMEB> new_instances = new LinkedList<>();
 		int init_batch_id = buffer.size() - Util.BATCH_SIZE;
+		int last_inst_idx = init_batch_id;
 		AppendOnlyKernelMEB baseInstance = new AppendOnlyKernelMEB(buffer.subList(init_batch_id, init_batch_id + Util.BATCH_SIZE), eps1, true);
 		
 		double beta = Util.EPS_MAX;
@@ -71,8 +72,10 @@ public class KernelSWMEBPlus {
 			if(baseInstance.radius2 / cur_radius2 >= (1.0 + beta) * (1.0 + beta)) {
 				new_instances.addFirst(new AppendOnlyKernelMEB(buffer.get(cur_batch_id).idx, baseInstance));
 				cur_radius2 = baseInstance.radius2;
-				beta /= Util.LAMBDA;
-				beta = Math.max(Util.EPS_MIN, beta);
+				last_inst_idx = cur_batch_id;
+			} else if ((last_inst_idx - cur_batch_id) >= (buffer.size() / Util.MIN_INST)) {
+				new_instances.addFirst(new AppendOnlyKernelMEB(buffer.get(cur_batch_id).idx, baseInstance));
+				last_inst_idx = cur_batch_id;
 			}
 		}
 		

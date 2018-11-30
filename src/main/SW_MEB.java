@@ -25,6 +25,7 @@ public class SW_MEB {
 		double eps1 = Double.parseDouble(args[5]);
 		Util.EPS_MIN = eps1 / 10.0;
 		Util.LAMBDA = Double.parseDouble(args[6]);
+		Util.MIN_INST = Integer.parseInt(args[6]);
 		Util.EPS_MAX = Double.parseDouble(args[7]);
 
 		switch (algorithm) {

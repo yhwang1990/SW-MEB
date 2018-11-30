@@ -53,10 +53,12 @@ public class AppendOnlyMEB {
 
 		long t1 = System.nanoTime();
 		coresetConstruct(pointSet.subList(0, Util.BATCH_SIZE));
+//		System.out.println(Util.BATCH_SIZE - 1 + "," + this.radius);
 		int batch_id = 1;
 		for (batch_id = 1; batch_id < pointSet.size() / Util.BATCH_SIZE; batch_id++) {
 			List<Point> next_batch = pointSet.subList(batch_id * Util.BATCH_SIZE, (batch_id + 1) * Util.BATCH_SIZE);
 			append(next_batch);
+//			System.out.println(next_batch.get(next_batch.size() - 1).idx + "," + this.radius);
 		}
 
 		if (batch_id * Util.BATCH_SIZE < pointSet.size()) {
