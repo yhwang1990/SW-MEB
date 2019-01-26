@@ -70,11 +70,11 @@ public class DynMEB_Kernel {
 				}
 				
 				Point new_point = new Point(i, data);
-//				Point expired_point = null;
+				Point expired_point = null;
 				buffer.addLast(new_point);
 				if (buffer.size() > Util.W) {
-//					expired_point = buffer.removeFirst();
-					buffer.removeFirst();
+					expired_point = buffer.removeFirst();
+//					buffer.removeFirst();
 				}
 				if (i + 1 > Util.W && (i - Util.W + 1) % offset == 0) {
 					inst = new DynamicKernelMEB(new ArrayList<>(buffer), eps);
@@ -85,17 +85,17 @@ public class DynMEB_Kernel {
 					inst.validate(buffer);
 					System.out.println();
 				}
-//				else if (inst != null && (i - Util.W + 1) / offset == 1 && i + 1 > Util.W && (i - Util.W + 1) % offset > 0 && (i - Util.W + 1) % offset <= 10) {
-//					inst.insert(new_point);
-//					inst.delete(expired_point);
-//					
-//					if ((i - Util.W + 1) % offset == 10) {
-//						System.out.print(inst.statTime());
-//						System.out.println();
-//					}
-//				}
+				else if (inst != null && (i - Util.W + 1) / offset == 1 && i + 1 > Util.W && (i - Util.W + 1) % offset > 0 && (i - Util.W + 1) % offset <= 10) {
+					inst.insert(new_point);
+					inst.delete(expired_point);
+					
+					if ((i - Util.W + 1) % offset == 10) {
+						System.out.print(inst.statTime());
+						System.out.println();
+					}
+				}
 			}
-//			System.out.println();
+			System.out.println();
 			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
