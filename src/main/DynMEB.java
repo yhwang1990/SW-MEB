@@ -47,27 +47,31 @@ public class DynMEB {
 					data[j] = Double.parseDouble(tokens[j]);
 				}
 				
-				Point new_point = new Point(i, data), expired_point = null;
+				Point new_point = new Point(i, data);
+//				Point  expired_point = null;
 				buffer.addLast(new_point);
 				if (buffer.size() > Util.W) {
-					expired_point = buffer.removeFirst();
+//					expired_point = buffer.removeFirst();
+					buffer.removeFirst();
 				}
 				
 				if (i + 1 > Util.W && (i - Util.W + 1) % offset == 0) {
 					inst = new DynamicMEB(new ArrayList<>(buffer), eps);
-					inst.approxMEB();
+//					inst.approxMEB();
 					System.out.println("Dynamic " + data_file + " " + Util.W + " " + Util.d + " " + eps);
 					System.out.println(i);
 					System.out.print(inst.toString());
-					inst.validate(buffer);
-				} else if (inst != null && i + 1 > Util.W && (i - Util.W + 1) % offset > 0 && (i - Util.W + 1) % offset <= 10) {
-					inst.insert(new_point);
-					inst.delete(expired_point);
-					
-					if ((i - Util.W + 1) % offset == 10) {
-						System.out.println(inst.statTime());
-					}
+//					inst.validate(buffer);
+					System.out.println();
 				}
+//				} else if (inst != null && i + 1 > Util.W && (i - Util.W + 1) % offset > 0 && (i - Util.W + 1) % offset <= 10) {
+//					inst.insert(new_point);
+//					inst.delete(expired_point);
+//					
+//					if ((i - Util.W + 1) % offset == 10) {
+//						System.out.println(inst.statTime());
+//					}
+//				}
 			}
 			System.out.println();
 			br.close();

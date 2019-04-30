@@ -121,8 +121,9 @@ public class Coreset {
 //			builder.append(center[i]).append(" ");
 //		}
 //		builder.append(center[Util.d - 1]).append("\n");
-		builder.append("radius ").append(radius).append("\n");
-		builder.append("time ").append(time_elapsed).append("s\n");
+//		builder.append("radius ").append(radius).append("\n");
+//		builder.append("time ").append(time_elapsed).append("s\n");
+		builder.append("coreset_size ").append(core_points.size()).append("\n");
 		return builder.toString();
 	}
 

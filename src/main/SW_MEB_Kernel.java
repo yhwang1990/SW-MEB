@@ -97,7 +97,7 @@ public class SW_MEB_Kernel {
 					System.out.println("SWMEB " + data_file + " " + Util.W + " " + Util.d + " " + eps1 + " " + Util.LAMBDA + " " + Util.EPS_MAX);
 					System.out.println(i);
 					System.out.print(inst.toString());
-					inst.validate(buffer);
+//					inst.validate(buffer);
 					System.out.println();
 				}
 			}
@@ -141,7 +141,7 @@ public class SW_MEB_Kernel {
 					System.out.println("SWMEB+ " + data_file + " " + Util.W + " " + Util.d + " " + eps1 + " " + Util.LAMBDA + " " + Util.EPS_MAX);
 					System.out.println(i);
 					System.out.print(inst.toString());
-					inst.validate(buffer);
+//					inst.validate(buffer);
 					System.out.println();
 				}
 			}

@@ -68,7 +68,8 @@ public class DynamicMEB {
 	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("radius ").append(radius).append("\n");
+//		builder.append("radius ").append(radius).append("\n");
+		builder.append("coreset_size ").append(coreset.size()).append("\n");
 		return builder.toString();
 	}
 	

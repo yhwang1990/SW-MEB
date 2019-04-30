@@ -68,7 +68,7 @@ public class MEB {
 					System.out.println("AppendOnly " + data_file + " " + Util.W + " " + Util.d + " " + eps);
 					System.out.println(i);
 					System.out.print(inst.toString());
-					inst.validate(buffer);
+//					inst.validate(buffer);
 					System.out.println();
 				}
 			}
@@ -102,7 +102,7 @@ public class MEB {
 					System.out.println("BlurredBallCover " + data_file + " " + Util.W + " " + Util.d + " " + eps);
 					System.out.println(i);
 					System.out.print(inst.toString());
-					inst.validate(buffer);
+//					inst.validate(buffer);
 					System.out.println();
 				}
 			}
@@ -136,7 +136,7 @@ public class MEB {
 					System.out.println("Coreset " + data_file + " " + Util.W + " " + Util.d + " " + eps);
 					System.out.println(i);
 					System.out.print(inst.toString());
-					inst.validate(buffer);
+//					inst.validate(buffer);
 					System.out.println();
 				}
 			}

@@ -110,10 +110,10 @@ public class KernelSWMEBPlus {
 		AppendOnlyKernelMEB inst = instances.getFirst();
 		
 		StringBuilder builder = new StringBuilder();
-		builder.append("radius ").append(Math.sqrt(inst.radius2)).append("\n");
-		builder.append("time ").append(time_elapsed).append("s\n");
-		builder.append("coreset_size ").append(computeCoresetSize()).append("\n");
-		builder.append("support_size ").append(inst.computeSupportSize()).append("\n");
+//		builder.append("radius ").append(Math.sqrt(inst.radius2)).append("\n");
+//		builder.append("time ").append(time_elapsed).append("s\n");
+		builder.append("coreset_size ").append(inst.core_points.size()).append("\n");
+//		builder.append("support_size ").append(inst.computeSupportSize()).append("\n");
 		return builder.toString();
 	}
 }

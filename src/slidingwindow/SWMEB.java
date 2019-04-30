@@ -137,9 +137,9 @@ public class SWMEB {
 			inst = instances.get(index.get(0));
 		}
 		StringBuilder builder = new StringBuilder();
-		builder.append("radius ").append(inst.radius).append("\n");
-		builder.append("time ").append(time_elapsed).append("s\n");
-		builder.append("coreset_size ").append(computeCoresetSize()).append("\n");
+//		builder.append("radius ").append(inst.radius).append("\n");
+//		builder.append("time ").append(time_elapsed).append("s\n");
+		builder.append("coreset_size ").append(inst.computeCoresetSize()).append("\n");
 		return builder.toString();
 	}
 }
