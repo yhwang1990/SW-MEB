@@ -9,7 +9,7 @@ import java.util.Random;
 import model.Point;
 import model.Util;
 
-public class KernelDensityEstimator {
+public class GammaEstimator {
 
 	public static final int SAMPLE_SIZE = 10000;
 	public static final Random RAND = new Random(0);
