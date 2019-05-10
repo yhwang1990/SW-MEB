@@ -1,4 +1,4 @@
-package slidingwindow;
+package sw_meb;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -8,17 +8,16 @@ import java.util.List;
 import model.Point;
 import model.Util;
 
-public class SWMEBPlus {
-	
+public class KernelSWMEB {
 	int cur_id;
 	private double eps1;
 	
-	LinkedList<AppendOnlyMEB> instances;
+	LinkedList<KernelAOMEB> instances;
 	List<Point> buffer;
 	
 	public double time_elapsed;
 
-	public SWMEBPlus(double eps1) {
+	public KernelSWMEB(double eps1) {
 		this.cur_id = -1;
 		this.eps1 = eps1;
 		
@@ -34,7 +33,7 @@ public class SWMEBPlus {
 		}
 
 		if (instances.size() > 0) {
-			for (AppendOnlyMEB inst : instances) {
+			for (KernelAOMEB inst : instances) {
 				inst.append(pointSet);
 			}
 		}
@@ -45,43 +44,34 @@ public class SWMEBPlus {
 			addInstances(buffer);
 			buffer.clear();
 		}
-		
-//		if (cur_id % 10000 == 9999) {
-//			System.out.println(cur_id);
-//			for (AppendOnlyMEB inst : instances) {
-//				System.out.print(inst.idx + ":" + inst.radius + " ");
-//			}
-//			System.out.println();
-//		}
 		long t2 = System.nanoTime();
 		time_elapsed += (t2 - t1) / 1e9;
 	}
 	
 	private void addInstances(List<Point> buffer) {
-		LinkedList<AppendOnlyMEB> new_inst = new LinkedList<>();
+		LinkedList<KernelAOMEB> new_instances = new LinkedList<>();
 		int init_batch_id = buffer.size() - Util.BATCH_SIZE;
 		int last_inst_idx = init_batch_id;
-		AppendOnlyMEB baseInstance = new AppendOnlyMEB(buffer.subList(init_batch_id, init_batch_id + Util.BATCH_SIZE), eps1, true);
-//		System.out.println(baseInstance.idx);
+		KernelAOMEB baseInstance = new KernelAOMEB(buffer.subList(init_batch_id, init_batch_id + Util.BATCH_SIZE), eps1, true);
 		
 		double beta = Util.EPS_MAX;
-		double cur_radius = baseInstance.radius;
-		new_inst.addFirst(new AppendOnlyMEB(baseInstance.idx, baseInstance));
+		double cur_radius2 = baseInstance.radius2;
+		new_instances.addFirst(new KernelAOMEB(baseInstance.idx, baseInstance));
 		for (int batch_id = Util.CHUNK_SIZE / Util.BATCH_SIZE - 2; batch_id >= 0; batch_id--) {
 			int cur_batch_id = batch_id * Util.BATCH_SIZE;
 			baseInstance.append(buffer.subList(cur_batch_id, cur_batch_id + Util.BATCH_SIZE));
 			
-			if(baseInstance.radius / cur_radius >= 1.0 + beta) {
-				new_inst.addFirst(new AppendOnlyMEB(buffer.get(cur_batch_id).idx, baseInstance));
-				cur_radius = baseInstance.radius;
+			if(baseInstance.radius2 / cur_radius2 >= (1.0 + beta) * (1.0 + beta)) {
+				new_instances.addFirst(new KernelAOMEB(buffer.get(cur_batch_id).idx, baseInstance));
+				cur_radius2 = baseInstance.radius2;
 				last_inst_idx = cur_batch_id;
 			} else if ((last_inst_idx - cur_batch_id) >= (buffer.size() / Util.MIN_INST)) {
-				new_inst.addFirst(new AppendOnlyMEB(buffer.get(cur_batch_id).idx, baseInstance));
+				new_instances.addFirst(new KernelAOMEB(buffer.get(cur_batch_id).idx, baseInstance));
 				last_inst_idx = cur_batch_id;
 			}
 		}
 		
-		for (AppendOnlyMEB inst : new_inst) {
+		for (KernelAOMEB inst : new_instances) {
 			instances.addLast(inst);
 		}
 	}
@@ -98,9 +88,9 @@ public class SWMEBPlus {
 		instances.getFirst().output();
 	}
 	
-	public int computeCoresetSize() {
+	public int computeNumberPoints() {
 		HashSet<Integer> core_idx = new HashSet<>();
-		for (AppendOnlyMEB inst : instances) {
+		for (KernelAOMEB inst : instances) {
 			for (Point p : inst.core_points) {
 				core_idx.add(p.idx);
 			}
@@ -109,13 +99,13 @@ public class SWMEBPlus {
 	}
 	
 	public String toString() {
-		AppendOnlyMEB inst = instances.getFirst();
+		KernelAOMEB inst = instances.getFirst();
 		
 		StringBuilder builder = new StringBuilder();
-//		builder.append("radius ").append(inst.radius).append("\n");
-//		builder.append("time ").append(time_elapsed).append("s\n");
-		builder.append("coreset_size ").append(inst.computeCoresetSize()).append("\n");
+		builder.append("radius=").append(Math.sqrt(inst.radius2)).append("\n");
+		builder.append("cpu_time=").append(time_elapsed).append("s\n");
+		builder.append("coreset_size=").append(inst.core_points.size()).append("\n");
+		builder.append("num_points=").append(computeNumberPoints()).append("\n");
 		return builder.toString();
 	}
-
 }

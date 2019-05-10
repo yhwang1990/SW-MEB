@@ -1,14 +1,13 @@
-package slidingwindow;
+package sw_meb;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import coreset.Coreset;
-
+import core_meb.CoreMEB;
 import model.Point;
 import model.Util;
 
-public class AppendOnlyMEB {
+public class AOMEB {
 
 	public int idx;
 	public ArrayList<Point> core_points;
@@ -19,7 +18,7 @@ public class AppendOnlyMEB {
 
 	private double eps;
 
-	public AppendOnlyMEB(List<Point> initPointSet, double eps, boolean append_mode) {
+	public AOMEB(List<Point> initPointSet, double eps, boolean append_mode) {
 		this.idx = initPointSet.get(0).idx;
 		this.eps = eps;
 		this.core_points = new ArrayList<>();
@@ -30,10 +29,9 @@ public class AppendOnlyMEB {
 		coresetConstruct(initPointSet);
 		long t2 = System.nanoTime();
 		this.time_elapsed += (t2 - t1) / 1e9;
-//		System.out.println(this.radius + "," + this.core_points.size());
 	}
 
-	public AppendOnlyMEB(int idx, AppendOnlyMEB inst) {
+	public AOMEB(int idx, AOMEB inst) {
 		this.idx = idx;
 		this.eps = inst.eps;
 		this.core_points = new ArrayList<>(inst.core_points);
@@ -44,7 +42,7 @@ public class AppendOnlyMEB {
 		this.time_elapsed = 0;
 	}
 
-	public AppendOnlyMEB(List<Point> pointSet, double eps) {
+	public AOMEB(List<Point> pointSet, double eps) {
 		this.idx = pointSet.get(0).idx;
 		this.eps = eps;
 		this.core_points = new ArrayList<>();
@@ -53,12 +51,10 @@ public class AppendOnlyMEB {
 
 		long t1 = System.nanoTime();
 		coresetConstruct(pointSet.subList(0, Util.BATCH_SIZE));
-//		System.out.println(Util.BATCH_SIZE - 1 + "," + this.radius);
 		int batch_id = 1;
 		for (batch_id = 1; batch_id < pointSet.size() / Util.BATCH_SIZE; batch_id++) {
 			List<Point> next_batch = pointSet.subList(batch_id * Util.BATCH_SIZE, (batch_id + 1) * Util.BATCH_SIZE);
 			append(next_batch);
-//			System.out.println(next_batch.get(next_batch.size() - 1).idx + "," + this.radius);
 		}
 
 		if (batch_id * Util.BATCH_SIZE < pointSet.size()) {
@@ -68,7 +64,7 @@ public class AppendOnlyMEB {
 		long t2 = System.nanoTime();
 		this.time_elapsed = (t2 - t1) / 1e9;
 
-		Coreset coreset = new Coreset(this.core_points, eps);
+		CoreMEB coreset = new CoreMEB(this.core_points, eps);
 		this.center = coreset.center;
 		this.radius = coreset.radius;
 	}
@@ -91,7 +87,7 @@ public class AppendOnlyMEB {
 	}
 
 	public void approxMEB() {
-		Coreset coreset = new Coreset(new ArrayList<>(core_points), eps);
+		CoreMEB coreset = new CoreMEB(new ArrayList<>(core_points), eps);
 
 		this.center = coreset.center;
 		this.radius = coreset.radius;
@@ -106,20 +102,20 @@ public class AppendOnlyMEB {
 			}
 		}
 		double exp_radius = Math.sqrt(max_sq_dist);
-		System.out.println("Actual Radius " + exp_radius);
+		System.out.println("meb_radius=" + exp_radius);
 	}
 
 	public void output() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius=").append(this.radius).append("\n");
-		builder.append("squared radius=").append(this.radius * this.radius).append("\n");
+		builder.append("sq_radius=").append(this.radius * this.radius).append("\n");
 		System.out.print(builder.toString());
 	}
-	
+
 	public int computeCoresetSize() {
 		return core_points.size();
 	}
-	
+
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 //		builder.append("center ");
@@ -127,9 +123,9 @@ public class AppendOnlyMEB {
 //			builder.append(center[i]).append(" ");
 //		}
 //		builder.append(center[Util.d - 1]).append("\n");
-//		builder.append("radius ").append(radius).append("\n");
-//		builder.append("time ").append(time_elapsed).append("s\n");
-		builder.append("coreset_size ").append(computeCoresetSize()).append("\n");
+		builder.append("radius=").append(radius).append("\n");
+		builder.append("cpu_time=").append(time_elapsed).append("s\n");
+		builder.append("coreset_size=").append(computeCoresetSize()).append("\n");
 		return builder.toString();
 	}
 
@@ -172,8 +168,7 @@ public class AppendOnlyMEB {
 			}
 			this.radius = (this.radius * this.radius / max_dist + max_dist) / 2.0;
 			for (int i = 0; i < Util.d; i++) {
-				this.center[i] = furthestPoint.data[i]
-						+ (this.radius / max_dist) * (this.center[i] - furthestPoint.data[i]);
+				this.center[i] = furthestPoint.data[i] + (this.radius / max_dist) * (this.center[i] - furthestPoint.data[i]);
 			}
 		}
 	}

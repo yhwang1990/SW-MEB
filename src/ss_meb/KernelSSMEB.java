@@ -1,4 +1,4 @@
-package simplestream;
+package ss_meb;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import model.Point;
 import model.Util;
 
-public class KernelSimpleStream {
+public class KernelSSMEB {
 	public ArrayList<Point> core_points;
 	public ArrayList<Double> coefficients;
 	public double radius;
@@ -16,7 +16,7 @@ public class KernelSimpleStream {
 	
 	public double time_elapsed = 0.0;
 	
-	public KernelSimpleStream(Point initPoint) {
+	public KernelSSMEB(Point initPoint) {
 		long t1 = System.nanoTime();
 		
 		this.core_points = new ArrayList<>();
@@ -38,7 +38,7 @@ public class KernelSimpleStream {
 		this.time_elapsed += (t2 - t1) / 1e9;
 	}
 	
-	public KernelSimpleStream(List<Point> pointSet) {
+	public KernelSSMEB(List<Point> pointSet) {
 		long t1 = System.nanoTime();
 		
 		this.core_points = new ArrayList<>();
@@ -77,8 +77,6 @@ public class KernelSimpleStream {
 			
 			updateKernelMatrix();
 			updateCNorm();
-			
-//			System.out.println(this.core_points.size() + "," + this.radius);
 		}
 		long t2 = System.nanoTime();
 		this.time_elapsed += (t2 - t1) / 1e9;
@@ -114,14 +112,13 @@ public class KernelSimpleStream {
 			}
 		}
 		double exp_radius = Math.sqrt(max_sq_dist);
-		System.out.println("Actual Radius " + exp_radius);
+		System.out.println("meb_radius=" + exp_radius);
 	}
 	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("radius ").append(radius).append("\n");
-		builder.append("time ").append(time_elapsed).append("s\n");
-		builder.append("support_size ").append(core_points.size()).append("\n");
+		builder.append("radius=").append(radius).append("\n");
+		builder.append("cpu_time=").append(time_elapsed).append("s\n");
 		return builder.toString();
 	}
 	

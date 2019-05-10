@@ -1,4 +1,4 @@
-package slidingwindow;
+package sw_meb;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,17 +10,16 @@ import java.util.ListIterator;
 import model.Point;
 import model.Util;
 
-public class SWMEB {
-	
+public class KernelSWMEB_Plus {
 	int cur_id;
 	double eps1;
 	
 	LinkedList<Integer> index;
-	HashMap<Integer, AppendOnlyMEB> instances;
+	HashMap<Integer, KernelAOMEB> instances;
 	
-	public double time_elapsed, deletion;
+	public double time_elapsed;
 
-	public SWMEB(double eps1) {
+	public KernelSWMEB_Plus(double eps1) {
 		this.cur_id = -1;
 		this.eps1 = eps1;
 		
@@ -36,12 +35,12 @@ public class SWMEB {
 		}
 
 		if (instances.size() > 0) {
-			for (AppendOnlyMEB inst : instances.values()) {
+			for (KernelAOMEB inst : instances.values()) {
 				inst.append(pointSet);
 			}
 		}
 		
-		AppendOnlyMEB new_inst = new AppendOnlyMEB(pointSet, eps1, true);
+		KernelAOMEB new_inst = new KernelAOMEB(pointSet, eps1, true);
 			
 		index.addLast(new_inst.idx);
 		instances.put(new_inst.idx, new_inst);
@@ -76,18 +75,18 @@ public class SWMEB {
 
 	int findNext(int cur, double beta) {
 		int next;
-		double cur_radius = instances.get(index.get(cur).intValue()).radius;
-		double nxt_radius = instances.get(index.get(cur + 1).intValue()).radius;
-		if (cur_radius / nxt_radius >= 1.0 + beta)
+		double cur_radius2 = instances.get(index.get(cur).intValue()).radius2;
+		double nxt_radius2 = instances.get(index.get(cur + 1).intValue()).radius2;
+		if (cur_radius2 / nxt_radius2 >= (1.0 + beta) * (1.0 + beta))
 			next = cur + 1;
 		else {
 			int i = cur + 2;
-			nxt_radius = instances.get(index.get(i)).radius;
-			while (i < index.size() - 1 && cur_radius / nxt_radius <= 1.0 + beta) {
+			nxt_radius2 = instances.get(index.get(i)).radius2;
+			while (i < index.size() - 1 && cur_radius2 / nxt_radius2 <= (1.0 + beta) * (1.0 + beta)) {
 				i++;
-				nxt_radius = instances.get(index.get(i)).radius;
+				nxt_radius2 = instances.get(index.get(i)).radius2;
 			}
-			if (i == index.size() - 1 && cur_radius / nxt_radius <= 1.0d + beta)
+			if (i == index.size() - 1 && cur_radius2 / nxt_radius2 <= (1.0 + beta) * (1.0 + beta))
 				next = i;
 			else
 				next = i - 1;
@@ -119,9 +118,9 @@ public class SWMEB {
 		}
 	}
 	
-	public int computeCoresetSize() {
+	public int computeNumberPoints() {
 		HashSet<Integer> core_idx = new HashSet<>();
-		for (AppendOnlyMEB inst : instances.values()) {
+		for (KernelAOMEB inst : instances.values()) {
 			for (Point p : inst.core_points) {
 				core_idx.add(p.idx);
 			}
@@ -130,16 +129,17 @@ public class SWMEB {
 	}
 	
 	public String toString() {
-		AppendOnlyMEB inst = null;
+		KernelAOMEB inst = null;
 		if (index.get(0) >= cur_id - Util.W + 1) {
 			inst = instances.get(index.get(1));
 		} else {
 			inst = instances.get(index.get(0));
 		}
 		StringBuilder builder = new StringBuilder();
-//		builder.append("radius ").append(inst.radius).append("\n");
-//		builder.append("time ").append(time_elapsed).append("s\n");
-		builder.append("coreset_size ").append(inst.computeCoresetSize()).append("\n");
+		builder.append("radius=").append(Math.sqrt(inst.radius2)).append("\n");
+		builder.append("cpu_time=").append(time_elapsed).append("s\n");
+		builder.append("coreset_size=").append(inst.core_points.size()).append("\n");
+		builder.append("num_points=").append(computeNumberPoints()).append("\n");
 		return builder.toString();
 	}
 }

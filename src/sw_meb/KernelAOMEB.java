@@ -1,14 +1,13 @@
-package slidingwindow;
+package sw_meb;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import coreset.KernelCoreset;
-
+import core_meb.KernelCoreMEB;
 import model.Point;
 import model.Util;
 
-public class AppendOnlyKernelMEB {
+public class KernelAOMEB {
 
 	public int idx;
 	public ArrayList<Point> core_points;
@@ -23,7 +22,7 @@ public class AppendOnlyKernelMEB {
 
 	private double eps;
 
-	public AppendOnlyKernelMEB(List<Point> initPointSet, double eps, boolean append_mode) {
+	public KernelAOMEB(List<Point> initPointSet, double eps, boolean append_mode) {
 		this.idx = initPointSet.get(0).idx;
 		this.eps = eps;
 		
@@ -39,11 +38,9 @@ public class AppendOnlyKernelMEB {
 		coresetInitial(initPointSet);
 		long t2 = System.nanoTime();
 		this.time_elapsed += (t2 - t1) / 1e9;
-
-//		System.out.println(this.radius + "," + this.core_points.size());
 	}
 
-	public AppendOnlyKernelMEB(int idx, AppendOnlyKernelMEB inst) {
+	public KernelAOMEB(int idx, KernelAOMEB inst) {
 		this.idx = idx;
 		this.eps = inst.eps;
 		
@@ -61,7 +58,7 @@ public class AppendOnlyKernelMEB {
 		this.time_elapsed = 0;
 	}
 
-	public AppendOnlyKernelMEB(List<Point> pointSet, double eps) {
+	public KernelAOMEB(List<Point> pointSet, double eps) {
 		this.idx = pointSet.get(0).idx;
 		this.eps = eps;
 		
@@ -75,12 +72,11 @@ public class AppendOnlyKernelMEB {
 
 		long t1 = System.nanoTime();
 		coresetInitial(pointSet.subList(0, Util.BATCH_SIZE));
-//		System.out.println(Util.BATCH_SIZE + "," + Math.sqrt(radius2));
+		
 		int batch_id = 1;
 		for (batch_id = 1; batch_id < pointSet.size() / Util.BATCH_SIZE; batch_id++) {
 			List<Point> next_batch = pointSet.subList(batch_id * Util.BATCH_SIZE, (batch_id + 1) * Util.BATCH_SIZE);
 			append(next_batch);
-//			System.out.println((batch_id + 1) * Util.BATCH_SIZE + "," + Math.sqrt(radius2));
 		}
 
 		if (batch_id * Util.BATCH_SIZE < pointSet.size()) {
@@ -90,7 +86,7 @@ public class AppendOnlyKernelMEB {
 		long t2 = System.nanoTime();
 		this.time_elapsed = (t2 - t1) / 1e9;
 
-		KernelCoreset coreset = new KernelCoreset(this.core_points, 1e-6);
+		KernelCoreMEB coreset = new KernelCoreMEB(this.core_points, 1e-6);
 		this.radius2 = coreset.radius2;
 		this.cNorm = coreset.cNorm;
 
@@ -113,14 +109,13 @@ public class AppendOnlyKernelMEB {
 
 		if (!new_core_points.isEmpty()) {
 			solveApxBall(new_core_points);
-//			System.out.println(core_points.size() + "," + radius2);
 		}
 		long t2 = System.nanoTime();
 		this.time_elapsed += (t2 - t1) / 1e9;
 	}
 
 	public void approxMEB() {
-		KernelCoreset coreset = new KernelCoreset(core_points, 1e-6);
+		KernelCoreMEB coreset = new KernelCoreMEB(core_points, 1e-6);
 		radius2 = coreset.radius2;
 		cNorm = coreset.cNorm;
 		
@@ -142,13 +137,13 @@ public class AppendOnlyKernelMEB {
 			}
 		}
 		double exp_radius = Math.sqrt(max_sq_dist);
-		System.out.println("Actual Radius " + exp_radius);
+		System.out.println("meb_radius=" + exp_radius);
 	}
 
 	public void output() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius=").append(Math.sqrt(radius2)).append("\n");
-		builder.append("squared radius=").append(radius2).append("\n");
+		builder.append("sq_radius=").append(radius2).append("\n");
 		System.out.print(builder.toString());
 	}
 	
@@ -164,15 +159,14 @@ public class AppendOnlyKernelMEB {
 	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-//		builder.append("radius ").append(Math.sqrt(radius2)).append("\n");
-//		builder.append("time ").append(time_elapsed).append("s\n");
-//		builder.append("support_size ").append(computeSupportSize()).append("\n");
-		builder.append("coreset_size ").append(core_points.size()).append("\n");
+		builder.append("radius=").append(Math.sqrt(radius2)).append("\n");
+		builder.append("cpu_time=").append(time_elapsed).append("s\n");
+		builder.append("coreset_size=").append(core_points.size()).append("\n");
 		return builder.toString();
 	}
 
 	private void coresetInitial(List<Point> points) {
-		KernelCoreset initCoreset = new KernelCoreset(points, eps);
+		KernelCoreMEB initCoreset = new KernelCoreMEB(points, eps);
 		
 		radius2 = initCoreset.radius2;
 		cNorm = initCoreset.cNorm;
@@ -182,8 +176,6 @@ public class AppendOnlyKernelMEB {
 			coefficients.add(initCoreset.coefficients[idx]);
 		}
 		initKernelMatrix();
-		
-//		System.out.println(core_points.size() + "," + radius2);
 	}
 
 	private void solveApxBall(List<Point> n_points) {

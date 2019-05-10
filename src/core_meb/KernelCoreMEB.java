@@ -1,4 +1,4 @@
-package coreset;
+package core_meb;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,7 +7,7 @@ import java.util.List;
 import model.Point;
 import model.Util;
 
-public class KernelCoreset {
+public class KernelCoreMEB {
 	public List<Point> points;
 	public HashSet<Integer> core_indices;
 	public double[] coefficients;
@@ -29,7 +29,7 @@ public class KernelCoreset {
 		}
 	}
 
-	public KernelCoreset(List<Point> pointSet, double eps) {
+	public KernelCoreMEB(List<Point> pointSet, double eps) {
 		this.points = pointSet;
 		this.core_indices = new HashSet<>();
 		this.coefficients = new double[this.points.size()];
@@ -41,50 +41,10 @@ public class KernelCoreset {
 		this.eps = eps;
 
 		long t1 = System.nanoTime();
-//		coresetConstruct();
 		coresetConstructwithAwaySteps();
 		long t2 = System.nanoTime();
 		this.time_elapsed = (t2 - t1) / 1e9;
 	}
-
-//	private void coresetConstruct() {
-//		Point firstPoint = points.get(0);
-//		IdDistPair pair1 = findFarthestPoint(firstPoint);
-//		IdDistPair pair2 = findFarthestPoint(points.get(pair1.idx));
-//
-//		core_indices.add(pair1.idx);
-//		core_indices.add(pair2.idx);
-//		coefficients[pair1.idx] = coefficients[pair2.idx] = 0.5;
-//		
-//		initKernelMatrix();
-//		updateCNorm();
-//		radius2 = 1.0 - cNorm;
-//		System.out.println(core_indices.size() + "," + radius2);
-//		
-//		IdDistPair furthestPair = findFarthestPoint();
-//		double delta = furthestPair.dist2 / radius2 - 1.0;
-//		while (delta > (1.0 + eps) * (1.0 + eps) - 1.0) {
-//			if (! core_indices.contains(furthestPair.idx)) {
-//				core_indices.add(furthestPair.idx);
-//				addToKernelMatrix(furthestPair.idx);
-//			}
-//			
-//			double lambda = delta / (2.0 * (1.0 + delta));
-//			
-//			for (int idx : core_indices) {
-//				coefficients[idx] = (1.0 - lambda) * coefficients[idx];
-//			}
-//			coefficients[furthestPair.idx] += lambda;
-//			
-//			updateCNorm();
-//			radius2 = 1.0 - cNorm;
-//			System.out.println(core_indices.size() + "," + radius2);
-//			
-//			furthestPair = findFarthestPoint();
-//			delta = furthestPair.dist2 / radius2 - 1.0;
-//			System.out.println(delta);
-//		}
-//	}
 	
 	private void coresetConstructwithAwaySteps() {
 		Point firstPoint = points.get(0);
@@ -98,7 +58,6 @@ public class KernelCoreset {
 		initKernelMatrix();
 		updateCNorm();
 		radius2 = 1.0 - cNorm;
-//		System.out.println(core_indices.size() + "," + radius2);
 		
 		IdDistPair furthestPair = findFarthestPoint();
 		IdDistPair nearestPair = findNearestPoint();
@@ -134,7 +93,6 @@ public class KernelCoreset {
 			}
 			updateCNorm();
 			radius2 = 1.0 - cNorm;
-//			System.out.println(core_indices.size() + "," + radius2);
 			
 			furthestPair = findFarthestPoint();
 			nearestPair = findNearestPoint();
@@ -142,8 +100,6 @@ public class KernelCoreset {
 			delta_plus = furthestPair.dist2 / radius2 - 1.0;
 			delta_minus = 1.0 - nearestPair.dist2 / radius2;
 			delta = Math.max(delta_plus, delta_minus);
-			
-//			System.out.println(delta);
 		}
 	}
 	
@@ -242,14 +198,6 @@ public class KernelCoreset {
 	}
 
 	public void validate(List<Point> pointSet) {
-//		double sum = 0.0;
-//		for (int idx : core_indices) {
-//			System.out.print(idx + ":" + coefficients[idx] + " ");
-//			sum += coefficients[idx];
-//		}
-//		System.out.println();
-//		System.out.println(sum);
-		
 		double max_sq_dist = 0.0;
 		for (Point point : pointSet) {
 			double sq_dist = dist2wc(point);
@@ -258,22 +206,21 @@ public class KernelCoreset {
 			}
 		}
 		double exp_radius = Math.sqrt(max_sq_dist);
-		System.out.println("Actual Radius " + exp_radius);
+		System.out.println("meb_radius=" + exp_radius);
 	}
 	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-//		builder.append("radius ").append(Math.sqrt(radius2)).append("\n");
-//		builder.append("time ").append(time_elapsed).append("s\n");
-//		builder.append("support_size ").append(core_indices.size()).append("\n");
-		builder.append("coreset_size ").append(core_indices.size()).append("\n");
+		builder.append("radius=").append(Math.sqrt(radius2)).append("\n");
+		builder.append("cpu_time=").append(time_elapsed).append("s\n");
+		builder.append("coreset_size=").append(core_indices.size()).append("\n");
 		return builder.toString();
 	}
 
 	public void output() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius=").append(Math.sqrt(radius2)).append("\n");
-		builder.append("squared radius=").append(radius2).append("\n");
+		builder.append("sq_radius=").append(radius2).append("\n");
 		System.out.print(builder.toString());
 	}
 }

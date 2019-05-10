@@ -1,4 +1,4 @@
-package ballcover;
+package blurred_ball_cover;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -6,8 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import coreset.Coreset;
-
+import core_meb.CoreMEB;
 import model.Point;
 import model.Util;
 
@@ -32,8 +31,6 @@ public class BlurredBallCover {
 		BlurredBall initBall = new BlurredBall(0, initPointSet);
 		this.union_coreset.addAll(initBall.ball_coreset);
 		this.blurred_cover.addFirst(initBall);
-				
-//		System.out.println(this.blurred_cover.getFirst().ball_radius + "," + this.union_coreset.size());
 		long t2 = System.nanoTime();
 		this.time_elapsed += (t2 - t1) / 1e9;
 	}
@@ -49,14 +46,11 @@ public class BlurredBallCover {
 		int batch_id = 0;
 		for (batch_id = 0; batch_id < pointSet.size() / Util.BATCH_SIZE; batch_id++) {
 			List<Point> next_batch = pointSet.subList(batch_id * Util.BATCH_SIZE, (batch_id + 1) * Util.BATCH_SIZE);
-//			System.out.println(next_batch.get(0).idx);
-			
+
 			if (this.blurred_cover.isEmpty()) {
 				BlurredBall initBall = new BlurredBall(0, next_batch);
 				this.union_coreset.addAll(initBall.ball_coreset);
 				this.blurred_cover.addFirst(initBall);
-				
-//				System.out.println(this.blurred_cover.getFirst().ball_radius + "," + this.union_coreset.size());
 			} else {
 				append(next_batch);
 			}
@@ -64,19 +58,17 @@ public class BlurredBallCover {
 		
 		if (batch_id * Util.BATCH_SIZE < pointSet.size()) {
 			List<Point> next_batch = pointSet.subList(batch_id * Util.BATCH_SIZE, pointSet.size());
-//			System.out.println(next_batch.get(0).idx);
 			append(next_batch);
 		}
 		long t2 = System.nanoTime();
 		this.time_elapsed = (t2 - t1) / 1e9;
 		
-		Coreset coreset = new Coreset(new ArrayList<>(this.union_coreset), eps);
+		CoreMEB coreset = new CoreMEB(new ArrayList<>(this.union_coreset), eps);
 		this.center = coreset.center;
 		this.radius = coreset.radius;
 	}
 	
 	public void append(List<Point> pointSet) {
-//		System.out.println(pointSet.get(0).idx);
 		long t1 = System.nanoTime();
 		boolean need_update = false;
 		for (Point p : pointSet) {
@@ -104,15 +96,13 @@ public class BlurredBallCover {
 			
 			this.union_coreset.addAll(nextBall.ball_coreset);
 			this.blurred_cover.addFirst(nextBall);
-			
-//			System.out.println(this.blurred_cover.getFirst().ball_radius + "," + this.union_coreset.size());
 		}
 		long t2 = System.nanoTime();
 		this.time_elapsed += (t2 - t1) / 1e9;
 	}
 	
 	public void approxMEB() {
-		Coreset coreset = new Coreset(new ArrayList<>(union_coreset), eps);
+		CoreMEB coreset = new CoreMEB(new ArrayList<>(union_coreset), eps);
 		this.center = coreset.center;
 		this.radius = coreset.radius;
 	}
@@ -126,7 +116,7 @@ public class BlurredBallCover {
 			}
 		}
 		double exp_radius = Math.sqrt(max_sq_dist);
-		System.out.println("Actual Radius " + exp_radius);
+		System.out.println("meb_radius=" + exp_radius);
 	}
 	
 	public String toString() {
@@ -136,16 +126,16 @@ public class BlurredBallCover {
 //			builder.append(center[i]).append(" ");
 //		}
 //		builder.append(center[Util.d - 1]).append("\n");
-//		builder.append("radius ").append(radius).append("\n");
-//		builder.append("time ").append(time_elapsed).append("s\n");
-		builder.append("coreset_size ").append(union_coreset.size()).append("\n");
+		builder.append("radius=").append(radius).append("\n");
+		builder.append("cpu_time=").append(time_elapsed).append("s\n");
+		builder.append("coreset_size=").append(union_coreset.size()).append("\n");
 		return builder.toString();
 	}
 
 	public void output() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius=").append(this.radius).append("\n");
-		builder.append("squared radius=").append(this.radius * this.radius).append("\n");
+		builder.append("sq_radius=").append(this.radius * this.radius).append("\n");
 		System.out.print(builder.toString());
 	}
 	
@@ -158,7 +148,7 @@ public class BlurredBallCover {
 		BlurredBall(int id, List<Point> pointSet) {
 			this.ball_id = id;
 			
-			Coreset coreset = new Coreset(pointSet, eps / 3.0);
+			CoreMEB coreset = new CoreMEB(pointSet, eps / 3.0);
 			this.ball_center = coreset.center;
 			this.ball_radius = coreset.radius;
 			this.ball_coreset = coreset.core_points;

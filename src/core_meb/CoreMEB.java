@@ -1,4 +1,4 @@
-package coreset;
+package core_meb;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import model.Point;
 import model.Util;
 
-public class Coreset {
+public class CoreMEB {
 	public ArrayList<Point> core_points;
 	public double[] center;
 	public double radius;
@@ -15,7 +15,7 @@ public class Coreset {
 
 	private double eps;
 
-	public Coreset(List<Point> pointSet, double eps) {
+	public CoreMEB(List<Point> pointSet, double eps) {
 		this.core_points = new ArrayList<>(Util.d);
 		this.center = new double[Util.d];
 		this.radius = 0.0;
@@ -111,7 +111,7 @@ public class Coreset {
 			}
 		}
 		double exp_radius = Math.sqrt(max_sq_dist);
-		System.out.println("Actual Radius " + exp_radius);
+		System.out.println("meb_radius=" + exp_radius);
 	}
 	
 	public String toString() {
@@ -121,16 +121,16 @@ public class Coreset {
 //			builder.append(center[i]).append(" ");
 //		}
 //		builder.append(center[Util.d - 1]).append("\n");
-//		builder.append("radius ").append(radius).append("\n");
-//		builder.append("time ").append(time_elapsed).append("s\n");
-		builder.append("coreset_size ").append(core_points.size()).append("\n");
+		builder.append("radius=").append(radius).append("\n");
+		builder.append("cpu_time=").append(time_elapsed).append("s\n");
+		builder.append("coreset_size=").append(core_points.size()).append("\n");
 		return builder.toString();
 	}
 
 	public void output() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius=").append(radius).append("\n");
-		builder.append("squared radius=").append(radius * radius).append("\n");
+		builder.append("sq_radius=").append(radius * radius).append("\n");
 		System.out.print(builder.toString());
 	}
 }

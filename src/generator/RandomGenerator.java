@@ -12,7 +12,7 @@ public class RandomGenerator {
 	public static void genNormal(int n, int d) {
 		Random rand = new Random(0l);
 		try {
-			FileWriter fw = new FileWriter("normal-" + n + "-" + d + ".txt");
+			FileWriter fw = new FileWriter("synthetic-" + n + "-" + d + ".txt");
 			for (int i = 0; i < n; i++) {
 				StringBuilder builder = new StringBuilder();
 				for (int j = 0; j < d; j++) {
@@ -39,7 +39,7 @@ public class RandomGenerator {
 	public static void genNormal(int n, int d, long seed) {
 		Random rand = new Random(seed);
 		try {
-			FileWriter fw = new FileWriter("normal-" + n + "-" + d + ".txt");
+			FileWriter fw = new FileWriter("synthetic-" + n + "-" + d + ".txt");
 			for (int i = 0; i < n; i++) {
 				StringBuilder builder = new StringBuilder();
 				for (int j = 0; j < d; j++) {

@@ -1,4 +1,4 @@
-package dynamic;
+package dyn_meb;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,12 +8,11 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Random;
 
-import coreset.KernelCoreset;
-
+import core_meb.KernelCoreMEB;
 import model.Point;
 import model.Util;
 
-public class DynamicKernelMEB {
+public class KernelDynMEB {
 	static final Random RAND = new Random(0);
 
 	public HashSet<Point> union_coreset;
@@ -27,7 +26,7 @@ public class DynamicKernelMEB {
 
 	public double time_elapsed = 0.0;
 
-	public DynamicKernelMEB(List<Point> pointSet, double eps) {
+	public KernelDynMEB(List<Point> pointSet, double eps) {
 		this.union_coreset = new HashSet<>();
 		this.coreset = new ArrayList<>();
 		this.coefficients = new ArrayList<>();
@@ -53,7 +52,7 @@ public class DynamicKernelMEB {
 	}
 
 	public void approxMEB() {
-		KernelCoreset k_coreset = new KernelCoreset(new ArrayList<>(union_coreset), 1e-6);
+		KernelCoreMEB k_coreset = new KernelCoreMEB(new ArrayList<>(union_coreset), 1e-6);
 		radius2 = k_coreset.radius2;
 		cNorm = k_coreset.cNorm;
 		for (int idx : k_coreset.core_indices) {
@@ -71,27 +70,26 @@ public class DynamicKernelMEB {
 			}
 		}
 		double exp_radius = Math.sqrt(max_sq_dist);
-		System.out.println("Actual Radius " + exp_radius);
+		System.out.println("meb_radius=" + exp_radius);
 	}
 	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-//		builder.append("radius ").append(Math.sqrt(radius2)).append("\n");
-//		builder.append("support_size ").append(coreset.size()).append("\n");
-		builder.append("coreset_size ").append(union_coreset.size()).append("\n");
+		builder.append("radius=").append(Math.sqrt(radius2)).append("\n");
+		builder.append("coreset_size=").append(union_coreset.size()).append("\n");
 		return builder.toString();
 	}
 	
 	public String statTime() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("time ").append(time_elapsed).append("s\n");
+		builder.append("cpu_time=").append(time_elapsed / 10.0).append("s\n");
 		return builder.toString();
 	}
 
 	public void output() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius=").append(Math.sqrt(radius2)).append("\n");
-		builder.append("squared radius=").append(radius2).append("\n");
+		builder.append("sq_radius=").append(radius2).append("\n");
 		System.out.print(builder.toString());
 	}
 
@@ -173,18 +171,9 @@ public class DynamicKernelMEB {
 						updateCNorm();
 						l_radius2 = 1.0 - l_cNorm;
 					} else {
-//						double size = l_coefficients.size() + 1.0;
-//						for (int idx : l_coefficients.keySet()) {
-//							l_coefficients.put(idx, (1.0 - size) * l_coefficients.get(idx));
-//						}
 						l_coefficients.put(pi.idx, 0.0);
 					}
 					solveApxBall();
-//					for (int idx : l_coefficients.keySet()) {
-//						System.out.print(idx + ":" + l_coefficients.get(idx) + " ");
-//					}
-//					System.out.println();
-//					System.out.println(level_id + ":" + l_radius2);
 				}
 			}
 
@@ -207,8 +196,6 @@ public class DynamicKernelMEB {
 			}
 
 			counter = Math.max(1, (int) (Util.DELTA * P.size()));
-			
-//			System.out.println(level_id + ":" + l_radius2 + "," + l_coreset.size() + "," + u_coreset.size());
 		}
 
 		void delete(Point p) {
@@ -282,7 +269,6 @@ public class DynamicKernelMEB {
 		private void solveApxBall() {
 			DistItem furthestItem = findFarthestPoint();
 			DistItem nearestItem = findNearestPoint();
-//			System.out.println(furthestItem.p.idx + "," + nearestItem.p.idx);
 			
 			double delta_plus = furthestItem.dist2 / l_radius2 - 1.0;
 			double delta_minus = 1.0 - nearestItem.dist2 / l_radius2;
@@ -306,11 +292,6 @@ public class DynamicKernelMEB {
 				}
 				updateCNorm();
 				l_radius2 = 1.0 - l_cNorm;
-//				System.out.println(l_coreset.size() + "," + radius2);
-//				for (int idx : l_coefficients.keySet()) {
-//					System.out.print(idx + ":" + l_coefficients.get(idx) + " ");
-//				}
-//				System.out.println();
 				
 				furthestItem = findFarthestPoint();
 				nearestItem = findNearestPoint();
@@ -318,8 +299,6 @@ public class DynamicKernelMEB {
 				delta_plus = furthestItem.dist2 / l_radius2 - 1.0;
 				delta_minus = 1.0 - nearestItem.dist2 / l_radius2;
 				delta = Math.max(delta_plus, delta_minus);
-				
-//				System.out.println(delta);
 			}
 		}
 		

@@ -1,4 +1,4 @@
-package dynamic;
+package dyn_meb;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,12 +7,11 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Random;
 
-import coreset.Coreset;
-
+import core_meb.CoreMEB;
 import model.Point;
 import model.Util;
 
-public class DynamicMEB {
+public class DynMEB {
 	static final Random RAND = new Random(0);
 
 	public double radius;
@@ -24,7 +23,7 @@ public class DynamicMEB {
 
 	public double time_elapsed = 0.0;
 
-	public DynamicMEB(List<Point> pointSet, double eps) {
+	public DynMEB(List<Point> pointSet, double eps) {
 		this.center = new double[Util.d];
 		this.radius = 0.0;
 
@@ -49,7 +48,7 @@ public class DynamicMEB {
 	}
 
 	public void approxMEB() {
-		Coreset core = new Coreset(new ArrayList<>(coreset), eps);
+		CoreMEB core = new CoreMEB(new ArrayList<>(coreset), eps);
 		radius = core.radius;
 		center = core.center;
 	}
@@ -63,26 +62,26 @@ public class DynamicMEB {
 			}
 		}
 		double exp_radius = Math.sqrt(max_sq_dist);
-		System.out.println("Actual Radius " + exp_radius);
+		System.out.println("meb_radius=" + exp_radius);
 	}
 	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-//		builder.append("radius ").append(radius).append("\n");
-		builder.append("coreset_size ").append(coreset.size()).append("\n");
+		builder.append("radius=").append(radius).append("\n");
+		builder.append("coreset_size=").append(coreset.size()).append("\n");
 		return builder.toString();
 	}
 	
 	public String statTime() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("time ").append(time_elapsed).append("s\n");
+		builder.append("cpu_time=").append(time_elapsed / 10.0).append("s\n");
 		return builder.toString();
 	}
 
 	public void output() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius=").append(radius).append("\n");
-		builder.append("squared radius=").append(radius * radius).append("\n");
+		builder.append("sq_radius=").append(radius * radius).append("\n");
 		System.out.print(builder.toString());
 	}
 

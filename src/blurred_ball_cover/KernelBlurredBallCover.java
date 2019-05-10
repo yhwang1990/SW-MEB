@@ -1,4 +1,4 @@
-package ballcover;
+package blurred_ball_cover;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import coreset.KernelCoreset;
+import core_meb.KernelCoreMEB;
 import model.Point;
 import model.Util;
 
@@ -34,8 +34,6 @@ public class KernelBlurredBallCover {
 		KernelBlurredBall initBall = new KernelBlurredBall(0, initPointSet);
 		this.union_coreset.addAll(initBall.ball_coreset);
 		this.blurred_cover.addFirst(initBall);
-				
-//		System.out.println(this.blurred_cover.getFirst().ball_radius + "," + this.union_coreset.size());
 		long t2 = System.nanoTime();
 		this.time_elapsed += (t2 - t1) / 1e9;
 	}
@@ -52,14 +50,11 @@ public class KernelBlurredBallCover {
 		int batch_id = 0;
 		for (batch_id = 0; batch_id < pointSet.size() / Util.BATCH_SIZE; batch_id++) {
 			List<Point> next_batch = pointSet.subList(batch_id * Util.BATCH_SIZE, (batch_id + 1) * Util.BATCH_SIZE);
-//			System.out.println(next_batch.get(0).idx);
 			
 			if (this.blurred_cover.isEmpty()) {
 				KernelBlurredBall initBall = new KernelBlurredBall(0, next_batch);
 				this.union_coreset.addAll(initBall.ball_coreset);
 				this.blurred_cover.addFirst(initBall);
-				
-//				System.out.println(this.blurred_cover.getFirst().ball_radius2 + "," + this.union_coreset.size());
 			} else {
 				append(next_batch);
 			}
@@ -67,13 +62,12 @@ public class KernelBlurredBallCover {
 		
 		if (batch_id * Util.BATCH_SIZE < pointSet.size()) {
 			List<Point> next_batch = pointSet.subList(batch_id * Util.BATCH_SIZE, pointSet.size());
-//			System.out.println(next_batch.get(0).idx);
 			append(next_batch);
 		}
 		long t2 = System.nanoTime();
 		this.time_elapsed = (t2 - t1) / 1e9;
 		
-		KernelCoreset coreset = new KernelCoreset(new ArrayList<>(this.union_coreset), 1e-6);
+		KernelCoreMEB coreset = new KernelCoreMEB(new ArrayList<>(this.union_coreset), 1e-6);
 		this.radius2 = coreset.radius2;
 		this.cNorm = coreset.cNorm;
 		for (int idx : coreset.core_indices) {
@@ -83,7 +77,6 @@ public class KernelBlurredBallCover {
 	}
 	
 	public void append(List<Point> pointSet) {
-//		System.out.println(pointSet.get(0).idx);
 		long t1 = System.nanoTime();
 		boolean need_update = false;
 		for (Point p : pointSet) {
@@ -111,15 +104,13 @@ public class KernelBlurredBallCover {
 			
 			union_coreset.addAll(nextBall.ball_coreset);
 			blurred_cover.addFirst(nextBall);
-			
-//			System.out.println(this.blurred_cover.getFirst().ball_radius2 + "," + this.union_coreset.size());
 		}
 		long t2 = System.nanoTime();
 		time_elapsed += (t2 - t1) / 1e9;
 	}
 	
 	public void approxMEB() {
-		KernelCoreset coreset = new KernelCoreset(new ArrayList<>(union_coreset), 1e-6);
+		KernelCoreMEB coreset = new KernelCoreMEB(new ArrayList<>(union_coreset), 1e-6);
 		radius2 = coreset.radius2;
 		cNorm = coreset.cNorm;
 		for (int idx : coreset.core_indices) {
@@ -137,22 +128,21 @@ public class KernelBlurredBallCover {
 			}
 		}
 		double exp_radius = Math.sqrt(max_sq_dist);
-		System.out.println("Actual Radius " + exp_radius);
+		System.out.println("meb_radius=" + exp_radius);
 	}
 	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-//		builder.append("radius ").append(Math.sqrt(radius2)).append("\n");
-//		builder.append("time ").append(time_elapsed).append("s\n");
-//		builder.append("support_size ").append(result_coreset.size()).append("\n");
-		builder.append("coreset_size ").append(union_coreset.size()).append("\n");
+		builder.append("radius=").append(Math.sqrt(radius2)).append("\n");
+		builder.append("cpu_time=").append(time_elapsed).append("s\n");
+		builder.append("coreset_size=").append(union_coreset.size()).append("\n");
 		return builder.toString();
 	}
 
 	public void output() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("radius=").append(Math.sqrt(radius2)).append("\n");
-		builder.append("squared radius=").append(radius2).append("\n");
+		builder.append("sq_radius=").append(radius2).append("\n");
 		System.out.print(builder.toString());
 	}
 	
@@ -168,7 +158,7 @@ public class KernelBlurredBallCover {
 			this.ball_coreset = new  ArrayList<>();
 			this.ball_coefficients = new ArrayList<>();
 			
-			KernelCoreset coreset = new KernelCoreset(pointSet, eps / 3.0);
+			KernelCoreMEB coreset = new KernelCoreMEB(pointSet, eps / 3.0);
 			this.ball_radius2 = coreset.radius2;
 			this.ball_cNorm = coreset.cNorm;
 			for (int idx : coreset.core_indices) {

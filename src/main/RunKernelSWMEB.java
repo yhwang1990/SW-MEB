@@ -9,10 +9,13 @@ import java.util.List;
 
 import model.Point;
 import model.Util;
-import slidingwindow.SWMEB;
-import slidingwindow.SWMEBPlus;
+import sw_meb.KernelSWMEB_Plus;
+import sw_meb.KernelSWMEB;
 
-public class SW_MEB {
+public class RunKernelSWMEB {
+	
+	public static final String GAMMA_FILE = "data/gamma.txt";
+	
 	public static void main(String[] args) {
 		String algorithm = args[0];
 		String data_file = args[1];
@@ -20,13 +23,15 @@ public class SW_MEB {
 		int N = Integer.parseInt(args[2]);
 		Util.W = Integer.parseInt(args[3]);
 		Util.d = Integer.parseInt(args[4]);
-		Util.CHUNK_SIZE = Util.W /10;
+		Util.CHUNK_SIZE = Util.W / 10;
+		
+		read_gamma_value(data_file, Util.d);
 		
 		double eps1 = Double.parseDouble(args[5]);
 		Util.EPS_MIN = eps1 / 10.0;
-		Util.LAMBDA = Double.parseDouble(args[6]);
-		Util.MIN_INST = Integer.parseInt(args[6]);
-		Util.EPS_MAX = Double.parseDouble(args[7]);
+		Util.LAMBDA = 4;
+		Util.MIN_INST = 10;
+		Util.EPS_MAX = 0.1;
 
 		switch (algorithm) {
 		case "SWMEB":
@@ -40,10 +45,27 @@ public class SW_MEB {
 			System.exit(0);
 		}
 	}
+	
+	private static void read_gamma_value(String data_file, int d) {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(GAMMA_FILE));
+			String line;
+			while ((line = br.readLine()) != null) {
+				if(line.startsWith(data_file + " " + d)) {
+					String[] tokens = line.split(" ");
+					Util.GAMMA = Double.parseDouble(tokens[2]);
+					break;
+				}
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private static void run_sw_meb(String data_file, int n, double eps1) {
 		LinkedList<Point> buffer = new LinkedList<>();
-		SWMEB inst = new SWMEB(eps1);
+		KernelSWMEB inst = new KernelSWMEB(eps1);
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(data_file));
 			String line;
@@ -72,10 +94,11 @@ public class SW_MEB {
 				}
 				
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
-					System.out.println("SWMEB " + data_file + " " + Util.W + " " + Util.d + " " + eps1 + " " + Util.LAMBDA + " " + Util.EPS_MAX);
+					System.out.println("SWMEB");
+					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps1);
 					System.out.println(i);
 					System.out.print(inst.toString());
-//					inst.validate(buffer);
+					inst.validate(buffer);
 					System.out.println();
 				}
 			}
@@ -87,7 +110,7 @@ public class SW_MEB {
 
 	private static void run_sw_meb_plus(String data_file, int n, double eps1) {
 		LinkedList<Point> buffer = new LinkedList<>();
-		SWMEBPlus inst = new SWMEBPlus(eps1);
+		KernelSWMEB_Plus inst = new KernelSWMEB_Plus(eps1);
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(data_file));
 			String line;
@@ -116,10 +139,11 @@ public class SW_MEB {
 				}
 				
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
-					System.out.println("SWMEB+ " + data_file + " " + Util.W + " " + Util.d + " " + eps1 + " " + Util.LAMBDA + " " + Util.EPS_MAX);
+					System.out.println("SWMEB+");
+					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps1);
 					System.out.println(i);
 					System.out.print(inst.toString());
-//					inst.validate(buffer);
+					inst.validate(buffer);
 					System.out.println();
 				}
 			}
