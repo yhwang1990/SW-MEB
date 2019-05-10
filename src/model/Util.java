@@ -101,4 +101,20 @@ public class Util {
 		}
 		return sum_dist2 / size;
 	}
+	
+	public static double spread_estimator(List<Point> points) {
+		double max_dist2 = 0.0, min_dist2 = Double.MAX_VALUE;
+		for (int i = 0; i < points.size(); i++) {
+			for (int j = 0; j < points.size(); j++) {
+				double dist2 = dist2(points.get(i).data, points.get(j).data);
+				if (dist2 > max_dist2) {
+					max_dist2 = dist2;
+				}
+				if (dist2 < min_dist2 && i != j && dist2 > 0) {
+					min_dist2 = dist2;
+				}
+			}
+		}
+		return Math.sqrt(max_dist2 / min_dist2);
+	}
 }

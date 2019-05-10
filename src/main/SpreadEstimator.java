@@ -9,7 +9,7 @@ import java.util.Random;
 import model.Point;
 import model.Util;
 
-public class KernelDensityEstimator {
+public class SpreadEstimator {
 
 	public static final int SAMPLE_SIZE = 10000;
 	public static final Random RAND = new Random(0);
@@ -32,8 +32,9 @@ public class KernelDensityEstimator {
 				}
 			}
 		}
-		double gamma = Util.kernel_width_estimator(samples);
-		System.out.println(data_file + " " + d + " " + gamma);
+		
+		double theta = Util.spread_estimator(samples);
+		System.out.println(data_file + " " + d + " " + theta);
 	}
 
 }
