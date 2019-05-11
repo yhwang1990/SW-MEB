@@ -35,11 +35,11 @@ To run an algorithm for MEB in Euclidean space:
 ```shell
     $ java -jar run-meb.jar <alg_name> <dataset_dir> <size> <N> <m> <eps>
     alg_name:    String, the algorithm name (AOMEB, BBC, CoreMEB, DynMEB, SSMEB, SWMEB, SWMEB+)
-    dataset_dir:    String, the path of the dataset file
-    size:    int, the number of points in the dataset file
-    N:    int, the window size
-    m:    int, the dimension of points
-    eps:    float, the parameter $\varepsilon$ or $\varepsilon_1$ (omitted in SSMEB)
+    dataset_dir: String, the path of the dataset file
+    size:        int, the number of points \in the dataset file
+    N:           int, the window size
+    m:           int, the dimension of points
+    eps:         float, the parameter epsilon or epsilon_1 (omitted \for SSMEB)
 ```
 
 For example,  
@@ -50,8 +50,6 @@ For example,
 
 or
 
-For example,  
-
 ```shell
     java -jar -Xmx80000m run-meb.jar SSMEB data/synthetic-1000000-10.txt 200000 100000 10
 ```
@@ -61,12 +59,14 @@ To run an algorithm for kernelized MEB in RKHS:
 ```shell
     $ java -jar run-kernel-meb.jar <alg_name> <dataset_dir> <size> <N> <m> <eps>
     alg_name:    String, the algorithm name (AOMEB, BBC, CoreMEB, DynMEB, SSMEB, SWMEB, SWMEB+)
-    dataset_dir:    String, the path of the dataset file
-    size:    int, the number of points in the dataset file
-    N:    int, the window size
-    m:    int, the dimension of points
-    eps:    float, the parameter $\varepsilon$ or $\varepsilon_1$ (omitted in SSMEB)
+    dataset_dir: String, the path of the dataset file
+    size:        int, the number of points \in the dataset file
+    N:           int, the window size
+    m:           int, the dimension of points
+    eps:         float, the parameter epsilon or epsilon_1 (omitted \for SSMEB)
 ```
+
+Note that the gamma value (kernel width) of each dataset is stored in `/data/gamma.txt` and read before running the algorithm.
 
 For example,  
 
@@ -86,11 +86,11 @@ or
     <alg_name>
     <dataset_dir> <N> <m> <eps>
     <idx>
-    radius=<$r^{*}(S_t)$> (or $r(B'_{t})$ for SSMEB)
+    radius=<the radius of the coreset's MEB, i.e., r^*(S_t)> (or the radius of approximate MEB returned by SSMEB)
     cpu_time=<CPU time> (time per update for AOMEB, BBC, CoreMEB, DynMEB, SSMEB; total update time for SWMEB, SWMEB+)
-    coreset_size=<the size of $S_t$>
+    coreset_size=<the size of the coreset>
     num_points=<the number of points stored by SWMEB/SWMEB+>
-    meb_radius=<$\lambda' \cdot r^{*}(S_t)$> (or $r(B'_{t})$ for SSMEB)
+    meb_radius=<the radius of approximate MEB computed from coreset> (or the radius of approximate MEB returned by SSMEB)
 ```
 
 ## Contact ##
