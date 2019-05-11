@@ -2,6 +2,8 @@
 
 A Java implementation of the algorithms in KDD'19 paper "Coresets for Minimum Enclosing Balls over Sliding Windows", an extended version of which is available on [arXiv](https://arxiv.org/abs/1905.03718).
 
+Please refer to [this repository](https://github.com/hbf/miniball) for the implementation of COMEB.
+
 ## Requirements ##
 
 JDK 8 or newer, no third-party libraries required
