@@ -56,12 +56,12 @@ public class RunDynMEB {
 				
 				if (i + 1 > Util.W && (i - Util.W + 1) % offset == 0) {
 					inst = new DynMEB(new ArrayList<>(buffer), eps);
+					inst.approxMEB();
 					System.out.println("DynMEB");
 					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps);
 					System.out.println(i);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
-					System.out.println();
 				} else if (inst != null && i + 1 > Util.W && (i - Util.W + 1) % offset > 0 && (i - Util.W + 1) % offset <= 10) {
 					inst.insert(new_point);
 					inst.delete(expired_point);

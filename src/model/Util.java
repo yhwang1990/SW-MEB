@@ -13,8 +13,8 @@ public class Util {
 	
 	public static double EPS_MAX = 0.1;
 	public static double EPS_MIN = 1e-6;
-	public static double LAMBDA = 2.0;
-	public static int MIN_INST = 5;
+	public static double LAMBDA = 4.0;
+	public static int MIN_INST = 10;
 	
 	public static int W = 100000;
 	public static int d = 10;
