@@ -104,7 +104,7 @@ public class RunKernelMEB {
 					KernelAOMEB inst = new KernelAOMEB(new ArrayList<>(buffer), eps);
 					System.out.println("AOMEB");
 					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps);
-					System.out.println(i);
+					System.out.println(i + 1);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
 					System.out.println();
@@ -139,7 +139,7 @@ public class RunKernelMEB {
 					KernelBlurredBallCover inst = new KernelBlurredBallCover(new ArrayList<>(buffer), eps);
 					System.out.println("BBC");
 					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps);
-					System.out.println(i);
+					System.out.println(i + 1);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
 					System.out.println();
@@ -174,7 +174,7 @@ public class RunKernelMEB {
 					KernelCoreMEB inst = new KernelCoreMEB(new ArrayList<>(buffer), eps);
 					System.out.println("CoreMEB");
 					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps);
-					System.out.println(i);
+					System.out.println(i + 1);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
 					System.out.println();
@@ -215,7 +215,7 @@ public class RunKernelMEB {
 					inst.approxMEB();
 					System.out.println("DynMEB");
 					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps);
-					System.out.println(i);
+					System.out.println(i + 1);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
 				} else if (inst != null && i + 1 > Util.W && (i - Util.W + 1) % offset > 0 && (i - Util.W + 1) % offset <= 10) {
@@ -257,7 +257,7 @@ public class RunKernelMEB {
 					KernelSSMEB inst = new KernelSSMEB(new ArrayList<>(buffer));
 					System.out.println("SSMEB");
 					System.out.println(data_file + " " + Util.W + " " + Util.d);
-					System.out.println(i);
+					System.out.println(i + 1);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
 					System.out.println();
@@ -302,7 +302,7 @@ public class RunKernelMEB {
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
 					System.out.println("SWMEB");
 					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps1);
-					System.out.println(i);
+					System.out.println(i + 1);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
 					System.out.println();
@@ -347,7 +347,7 @@ public class RunKernelMEB {
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
 					System.out.println("SWMEB+");
 					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps1);
-					System.out.println(i);
+					System.out.println(i + 1);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
 					System.out.println();

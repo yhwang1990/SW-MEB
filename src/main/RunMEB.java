@@ -82,7 +82,7 @@ public class RunMEB {
 					AOMEB inst = new AOMEB(new ArrayList<>(buffer), eps);
 					System.out.println("AOMEB");
 					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps);
-					System.out.println(i);
+					System.out.println(i + 1);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
 					System.out.println();
@@ -117,7 +117,7 @@ public class RunMEB {
 					BlurredBallCover inst = new BlurredBallCover(new ArrayList<>(buffer), eps);
 					System.out.println("BBC");
 					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps);
-					System.out.println(i);
+					System.out.println(i + 1);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
 					System.out.println();
@@ -152,7 +152,7 @@ public class RunMEB {
 					CoreMEB inst = new CoreMEB(new ArrayList<>(buffer), eps);
 					System.out.println("CoreMEB");
 					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps);
-					System.out.println(i);
+					System.out.println(i + 1);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
 					System.out.println();
@@ -194,7 +194,7 @@ public class RunMEB {
 					inst.approxMEB();
 					System.out.println("DynMEB");
 					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps);
-					System.out.println(i);
+					System.out.println(i + 1);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
 				} else if (inst != null && i + 1 > Util.W && (i - Util.W + 1) % offset > 0 && (i - Util.W + 1) % offset <= 10) {
@@ -236,7 +236,7 @@ public class RunMEB {
 					SSMEB inst = new SSMEB(new ArrayList<>(buffer));
 					System.out.println("SSMEB");
 					System.out.println(data_file + " " + Util.W + " " + Util.d);
-					System.out.println(i);
+					System.out.println(i + 1);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
 					System.out.println();
@@ -281,7 +281,7 @@ public class RunMEB {
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
 					System.out.println("SWMEB");
 					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps1);
-					System.out.println(i);
+					System.out.println(i + 1);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
 					System.out.println();
@@ -326,7 +326,7 @@ public class RunMEB {
 				if ((i + 1) > Util.W && (i - Util.W + 1) % offset == 0) {
 					System.out.println("SWMEB+");
 					System.out.println(data_file + " " + Util.W + " " + Util.d + " " + eps1);
-					System.out.println(i);
+					System.out.println(i + 1);
 					System.out.print(inst.toString());
 					inst.validate(buffer);
 					System.out.println();

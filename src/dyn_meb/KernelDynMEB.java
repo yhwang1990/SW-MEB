@@ -82,7 +82,7 @@ public class KernelDynMEB {
 	
 	public String statTime() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("cpu_time=").append(time_elapsed / 10.0).append("s\n");
+		builder.append("cpu_time=").append(time_elapsed * 10.0).append("s\n");
 		return builder.toString();
 	}
 
