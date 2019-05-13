@@ -97,16 +97,16 @@ or
 
 To compute the average error:
 
-1. For each timestamp *t*, compute the radius *r* of *W_t* (by COMEB for Euclidean MEB or CoreMEB with *eps=1e-9* for kernelized MEB);
-2. The relative error of an algorithm for *W_t* is `(meb_radius-r)/r`;
+1. At each timestamp `t`, compute the radius `r` of the MEB of `W_t` (by COMEB for Euclidean MEB or CoreMEB with `eps=1e-9` for kernelized MEB);
+2. The relative error of an algorithm at timestamp `t` is `(meb_radius-r)/r`;
 3. Compute the average error of an algorithm for all sampled timestamps.
 
 To compute the average update time:
 
-1. For all algorithms except SWMEB/SWMEB+, we record the CPU time for updating each batch of points and compute the update time of an algorithm by averaging all sampled timestamps.
-2. For SWMEB/SWMEB+, we record the total CPU time for updating all batches of points between two timestamps. So the average update time is computed by `(cputime2-cputime1)*batch_size/(timestamp2-timestamp1)`.
+1. For all algorithms except SWMEB/SWMEB+, we record the CPU time for updating each batch of points and compute the update time of an algorithm by averaging the results at all sampled timestamps.
+2. For SWMEB/SWMEB+, we record the total CPU time for updating all batches of points between two timestamps. So the average update time is computed by `(cpu_time2-cpu_time1)*batch_size/(timestamp2-timestamp1)`.
 
-To compute the coreset size or number of stored points, we average coreset_size or num_points for all sampled timestamps.
+To compute the coreset size or number of stored points, we average `coreset_size` or `num_points` at all sampled timestamps.
 
 ## Contact ##
 
