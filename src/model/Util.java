@@ -64,18 +64,18 @@ public class Util {
 		return dist2;
 	}
 	
-	public static double dist2wc(List<Point> pts, double[] coeff, Point p, double cNorm) {
-		double dist2 = 0.0;
-		for (int i = 0; i < pts.size(); i++) {
-			dist2 += (coeff[i] * rbf_eval(p, pts.get(i)));
-		}
-		dist2  = 1.0 + cNorm - 2.0 * dist2;
-		return dist2;
-	}
+//	public static double dist2wc(List<Point> pts, double[] coeff, Point p, double cNorm) {
+//		double dist2 = 0.0;
+//		for (int i = 0; i < pts.size(); i++) {
+//			dist2 += (coeff[i] * rbf_eval(p, pts.get(i)));
+//		}
+//		dist2  = 1.0 + cNorm - 2.0 * dist2;
+//		return dist2;
+//	}
 	
-	public static final List<Point> pointsFromStream(String data_file, int n, int d) throws IOException {
+	public static List<Point> pointsFromStream(String data_file, int n, int d) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(data_file));
-		String line = null;
+		String line;
 		ArrayList<Point> points = new ArrayList<>(n);
 		for (int i = 0; i < n; ++i) {
 			line = br.readLine();
@@ -94,9 +94,9 @@ public class Util {
 	public static double kernel_width_estimator(List<Point> points) {
 		double size = points.size() * points.size();
 		double sum_dist2  = 0.0;
-		for (int i = 0; i < points.size(); i++) {
-			for (int j = 0; j < points.size(); j++) {
-				sum_dist2 += dist2(points.get(i).data, points.get(j).data);
+		for (Point p1 : points) {
+			for (Point p2 : points) {
+				sum_dist2 += dist2(p1.data, p2.data);
 			}
 		}
 		return sum_dist2 / size;
