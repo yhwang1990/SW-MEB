@@ -95,7 +95,7 @@ public class KernelSWMEB_Plus {
 	}
 	
 	public void approxMEB() {
-		if (index.get(0) >= cur_id - Util.W + 1) {
+		if (index.get(0) < cur_id - Util.W + 1) {
 			instances.get(index.get(1)).approxMEB();
 		} else {
 			instances.get(index.get(0)).approxMEB();
@@ -103,7 +103,7 @@ public class KernelSWMEB_Plus {
 	}
 	
 	public void validate(List<Point> pointSet) {
-		if (index.get(0) >= cur_id - Util.W + 1) {
+		if (index.get(0) < cur_id - Util.W + 1) {
 			instances.get(index.get(1)).validate(pointSet);
 		} else {
 			instances.get(index.get(0)).validate(pointSet);
@@ -111,7 +111,7 @@ public class KernelSWMEB_Plus {
 	}
 
 	public void output() {
-		if (index.get(0) >= cur_id - Util.W + 1) {
+		if (index.get(0) < cur_id - Util.W + 1) {
 			instances.get(index.get(1)).output();
 		} else {
 			instances.get(index.get(0)).output();
@@ -130,7 +130,7 @@ public class KernelSWMEB_Plus {
 	
 	public String toString() {
 		KernelAOMEB inst = null;
-		if (index.get(0) >= cur_id - Util.W + 1) {
+		if (index.get(0) < cur_id - Util.W + 1) {
 			inst = instances.get(index.get(1));
 		} else {
 			inst = instances.get(index.get(0));
